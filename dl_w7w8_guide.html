@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning — Weeks 7 & 8 Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a0f;
+    --surface: #0d1118;
+    --surface2: #141b24;
+    --surface3: #1a2230;
+    --border: #222d3d;
+    --text: #d4ddf0;
+    --muted: #5e7291;
+    --accent-blue: #4d9fff;
+    --accent-teal: #2dd4bf;
+    --accent-green: #4ade80;
+    --accent-purple: #a78bfa;
+    --accent-orange: #fb923c;
+    --accent-red: #f87171;
+    --accent-yellow: #fbbf24;
+    --accent-pink: #f472b6;
+    --glow-blue: rgba(77,159,255,0.10);
+    --glow-teal: rgba(45,212,191,0.10);
+    --glow-green: rgba(74,222,128,0.10);
+    --glow-purple: rgba(167,139,250,0.10);
+    --glow-orange: rgba(251,146,60,0.10);
+    --glow-pink: rgba(244,114,182,0.10);
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.75; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.35; }
+
+  /* ── NAV ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(7,10,15,0.93); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); z-index: 100; padding: 0 2rem; display: flex; align-items: center; height: 56px; overflow-x: auto; gap: 0; }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-logo { font-family: var(--font-head); font-weight: 800; font-size: 0.95rem; color: var(--accent-teal); white-space: nowrap; margin-right: 2rem; letter-spacing: -0.02em; }
+  .nav-link { color: var(--muted); text-decoration: none; font-size: 0.77rem; font-weight: 500; padding: 0.4rem 0.85rem; border-radius: 6px; white-space: nowrap; transition: all 0.2s; }
+  .nav-link:hover { color: var(--text); background: var(--surface3); }
+  .nav-w7 { border-left: 2px solid var(--accent-teal); }
+  .nav-w8 { border-left: 2px solid var(--accent-pink); }
+
+  /* ── HERO ── */
+  .hero { padding: 8rem 2rem 5rem; max-width: 900px; margin: 0 auto; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; padding: 0.3rem 0.9rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .hero-badge span { color: var(--accent-teal); }
+  .hero h1 { font-family: var(--font-head); font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; background: linear-gradient(135deg, #e0f2fe 0%, var(--accent-teal) 45%, var(--accent-pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+  .hero p { color: var(--muted); max-width: 600px; font-size: 1rem; }
+  .week-pills { display: flex; gap: 0.75rem; margin-top: 2rem; flex-wrap: wrap; }
+  .pill { padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.82rem; font-weight: 600; }
+  .pill-teal { background: var(--glow-teal); border: 1px solid var(--accent-teal); color: var(--accent-teal); }
+  .pill-pink { background: var(--glow-pink); border: 1px solid var(--accent-pink); color: var(--accent-pink); }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── WEEK HEADERS ── */
+  .week-header { display: flex; align-items: center; gap: 1rem; margin: 5rem 0 3rem; }
+  .week-number { font-family: var(--font-head); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 100px; }
+  .week-number.w7 { background: var(--glow-teal); color: var(--accent-teal); border: 1px solid var(--accent-teal); }
+  .week-number.w8 { background: var(--glow-pink); color: var(--accent-pink); border: 1px solid var(--accent-pink); }
+  .week-title { font-family: var(--font-head); font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; }
+  .week-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* ── SECTIONS ── */
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 2.25rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+  .section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .section.teal::before { background: linear-gradient(90deg, var(--accent-teal), transparent); }
+  .section.blue::before { background: linear-gradient(90deg, var(--accent-blue), transparent); }
+  .section.green::before { background: linear-gradient(90deg, var(--accent-green), transparent); }
+  .section.purple::before { background: linear-gradient(90deg, var(--accent-purple), transparent); }
+  .section.orange::before { background: linear-gradient(90deg, var(--accent-orange), transparent); }
+  .section.pink::before { background: linear-gradient(90deg, var(--accent-pink), transparent); }
+  .section.yellow::before { background: linear-gradient(90deg, var(--accent-yellow), transparent); }
+
+  .section-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.6rem; }
+  .lbl-teal { color: var(--accent-teal); } .lbl-blue { color: var(--accent-blue); }
+  .lbl-green { color: var(--accent-green); } .lbl-purple { color: var(--accent-purple); }
+  .lbl-orange { color: var(--accent-orange); } .lbl-pink { color: var(--accent-pink); }
+  .lbl-yellow { color: var(--accent-yellow); }
+
+  .section h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.2rem; line-height: 1.25; }
+  .section h3 { font-family: var(--font-head); font-size: 1.0rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.7rem; }
+  .section p { margin-bottom: 0.9rem; }
+
+  /* ── ANALOGY ── */
+  .analogy { background: linear-gradient(135deg, rgba(251,146,60,0.08), rgba(251,146,60,0.03)); border: 1px solid rgba(251,146,60,0.3); border-radius: 12px; padding: 1.2rem 1.5rem; margin: 1.2rem 0; }
+  .analogy-icon { font-size: 1.35rem; margin-bottom: 0.4rem; display: block; }
+  .analogy-title { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-orange); font-weight: 700; margin-bottom: 0.4rem; }
+  .analogy p { color: var(--text); margin: 0; font-size: 0.92rem; }
+
+  /* ── FORMULA ── */
+  .formula { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent-teal); border-radius: 0 10px 10px 0; padding: 1.1rem 1.4rem; margin: 1rem 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-x: auto; white-space: pre-wrap; line-height: 1.85; color: #b0cce8; }
+  .formula .hi { color: var(--accent-yellow); }
+  .formula .sym { color: var(--accent-teal); }
+  .formula .op { color: var(--accent-orange); }
+
+  /* ── EXAMPLE ── */
+  .example { background: linear-gradient(135deg, rgba(74,222,128,0.07), rgba(74,222,128,0.02)); border: 1px solid rgba(74,222,128,0.22); border-radius: 12px; padding: 1.4rem; margin: 1.2rem 0; }
+  .example-title { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-green); font-weight: 700; margin-bottom: 0.75rem; }
+  .example table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.75rem 0; }
+  .example th { background: rgba(74,222,128,0.1); color: var(--accent-green); padding: 0.5rem 0.75rem; text-align: left; font-size: 0.77rem; font-weight: 600; letter-spacing: 0.04em; }
+  .example td { padding: 0.45rem 0.75rem; border-bottom: 1px solid rgba(74,222,128,0.07); font-family: var(--font-mono); font-size: 0.82rem; }
+  .example tr:last-child td { border-bottom: none; }
+  .example .result { margin-top: 0.75rem; padding: 0.65rem 1rem; background: rgba(74,222,128,0.1); border-radius: 8px; font-family: var(--font-mono); font-size: 0.86rem; color: var(--accent-green); }
+
+  /* ── CALLOUT ── */
+  .callout { background: rgba(77,159,255,0.07); border: 1px solid rgba(77,159,255,0.22); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.9rem; }
+  .callout.warn { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.22); }
+  .callout.tip { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.22); }
+  .callout strong { color: var(--accent-blue); }
+  .callout.warn strong { color: var(--accent-red); }
+  .callout.tip strong { color: var(--accent-yellow); }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width:640px) { .two-col { grid-template-columns: 1fr; } }
+  .col-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .col-card h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; font-family: var(--font-head); }
+  .col-card p { font-size: 0.87rem; margin: 0; color: var(--muted); }
+  .col-card ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.87rem; }
+  .col-card li { margin-bottom: 0.3rem; }
+
+  /* ── STEPS ── */
+  .steps { margin: 1rem 0; }
+  .step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+  .step-num { width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.77rem; font-weight: 800; flex-shrink: 0; font-family: var(--font-mono); }
+  .step-num.teal { background: var(--glow-teal); color: var(--accent-teal); border: 1px solid var(--accent-teal); }
+  .step-num.blue { background: var(--glow-blue); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+  .step-num.orange { background: var(--glow-orange); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
+  .step-num.purple { background: var(--glow-purple); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+  .step-num.pink { background: var(--glow-pink); color: var(--accent-pink); border: 1px solid var(--accent-pink); }
+  .step-num.green { background: var(--glow-green); color: var(--accent-green); border: 1px solid var(--accent-green); }
+  .step-body { flex: 1; padding-top: 0.2rem; font-size: 0.9rem; }
+  .step-body strong { color: var(--text); }
+
+  /* ── TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+  .compare-table th { background: var(--surface3); color: var(--muted); padding: 0.65rem 1rem; text-align: left; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+  .compare-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; font-size: 0.88rem; }
+  .compare-table tr:hover td { background: var(--surface2); }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  /* ── BADGE ── */
+  .badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 600; }
+  .badge-green { background: var(--glow-green); color: var(--accent-green); }
+  .badge-red { background: rgba(248,113,113,0.12); color: var(--accent-red); }
+  .badge-yellow { background: rgba(251,191,36,0.12); color: var(--accent-yellow); }
+  .badge-teal { background: var(--glow-teal); color: var(--accent-teal); }
+
+  /* ── MARK ── */
+  mark { background: rgba(77,159,255,0.14); color: var(--accent-blue); border-radius: 3px; padding: 0.05em 0.3em; }
+  mark.teal { background: rgba(45,212,191,0.14); color: var(--accent-teal); }
+  mark.orange { background: rgba(251,146,60,0.14); color: var(--accent-orange); }
+  mark.purple { background: rgba(167,139,250,0.14); color: var(--accent-purple); }
+  mark.green { background: rgba(74,222,128,0.14); color: var(--accent-green); }
+  mark.red { background: rgba(248,113,113,0.14); color: var(--accent-red); }
+  mark.pink { background: rgba(244,114,182,0.14); color: var(--accent-pink); }
+
+  /* ── SUMMARY ── */
+  .summary { background: linear-gradient(135deg, rgba(45,212,191,0.07), rgba(167,139,250,0.05)); border: 1px solid rgba(45,212,191,0.22); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+  .summary-title { font-family: var(--font-head); font-size: 0.88rem; font-weight: 700; color: var(--accent-teal); margin-bottom: 0.8rem; }
+  .summary ul { padding-left: 1.25rem; }
+  .summary li { margin-bottom: 0.4rem; font-size: 0.9rem; }
+
+  /* ── QUIZ ── */
+  .quiz { margin: 2rem 0 0.5rem; }
+  .quiz-title { font-family: var(--font-head); font-size: 0.9rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .quiz-q { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.75rem; }
+  .quiz-q p { font-size: 0.92rem; font-weight: 500; margin-bottom: 0.9rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.4rem; }
+  .quiz-opt { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.87rem; border: 1px solid transparent; transition: all 0.2s; background: var(--surface3); user-select: none; }
+  .quiz-opt:hover { border-color: var(--accent-purple); background: var(--glow-purple); }
+  .quiz-opt.correct { border-color: var(--accent-green); background: var(--glow-green); color: var(--accent-green); }
+  .quiz-opt.wrong { border-color: var(--accent-red); background: rgba(248,113,113,0.08); color: var(--accent-red); }
+  .quiz-opt.reveal-correct { border-color: var(--accent-green); background: var(--glow-green); }
+  .quiz-opt-key { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; width: 1.2rem; flex-shrink: 0; margin-top: 0.05rem; color: var(--muted); }
+  .quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.83rem; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--glow-green); color: var(--accent-green); }
+  .quiz-feedback.wrong { background: rgba(248,113,113,0.08); color: var(--accent-red); }
+
+  /* ── CODE ── */
+  .code-block { background: #08101a; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; font-family: var(--font-mono); font-size: 0.83rem; overflow-x: auto; line-height: 1.85; color: #a0bad4; margin: 1rem 0; }
+  .code-block .kw { color: #c792ea; }
+  .code-block .fn { color: var(--accent-teal); }
+  .code-block .st { color: var(--accent-green); }
+  .code-block .cm { color: #3d5268; font-style: italic; }
+  .code-block .num { color: var(--accent-orange); }
+
+  /* ── FLOWCHART ── */
+  .flowchart-wrap { margin: 1.5rem 0; overflow-x: auto; }
+  .flowchart-wrap svg { display: block; margin: 0 auto; max-width: 100%; }
+
+  /* ── GAN DIAGRAM ── */
+  .gan-flow { display: flex; align-items: center; gap: 0; margin: 1.25rem 0; overflow-x: auto; padding-bottom: 0.5rem; }
+  .gan-node { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 1rem; text-align: center; flex-shrink: 0; min-width: 100px; }
+  .gan-node .gn-title { font-family: var(--font-mono); font-size: 0.77rem; font-weight: 700; }
+  .gan-node .gn-sub { font-size: 0.67rem; color: var(--muted); margin-top: 0.15rem; line-height: 1.3; }
+  .gan-arrow { color: var(--muted); font-size: 1.3rem; padding: 0 0.35rem; flex-shrink: 0; }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  .section { animation: fadeIn 0.45s ease both; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">DL Study ▸ W7–8</div>
+  <a href="#w7" class="nav-link nav-w7">Week 7</a>
+  <a href="#latent" class="nav-link">Latent Space</a>
+  <a href="#classical" class="nav-link">PCA & SVD</a>
+  <a href="#genmodels" class="nav-link">Gen Model Taxonomy</a>
+  <a href="#ae-vae" class="nav-link">AE & VAE</a>
+  <a href="#gan" class="nav-link">GAN</a>
+  <a href="#w8" class="nav-link nav-w8">Week 8</a>
+  <a href="#rnn-intro" class="nav-link">RNN Intro</a>
+  <a href="#langmodel" class="nav-link">Language Models</a>
+  <a href="#perplexity" class="nav-link">Perplexity</a>
+  <a href="#rnn-arch" class="nav-link">RNN Architecture</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">IIT Madras · <span>DL & GenAI Cohort Jan 2026</span></div>
+  <h1>Generative Models &amp; Sequence Learning</h1>
+  <p>Complete beginner-friendly guide to Weeks 7 & 8 — latent spaces, the generative model family tree (AE→VAE→GAN→Diffusion), language models, tokenization, perplexity, and RNN architecture.</p>
+  <div class="week-pills">
+    <div class="pill pill-teal">Week 7 · Generative Model Families</div>
+    <div class="pill pill-pink">Week 8 · Sequences, Language Models & RNNs</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════ WEEK 7 ══ -->
+<div class="week-header" id="w7">
+  <div class="week-number w7">Week 7</div>
+  <div class="week-title">Generative Model Families: From Latent Spaces to GANs</div>
+  <div class="week-line"></div>
+</div>
+
+<!-- SECTION: LATENT SPACE DEEP DIVE -->
+<div class="section teal" id="latent">
+  <div class="section-label lbl-teal">7.1 · Foundations</div>
+  <h2>Latent Space — The Hidden Code of Reality</h2>
+  <p>Every piece of data in the world is extremely high-dimensional. A 256×256 image has 196,608 numbers. But most of that information is <em>redundant</em>. A latent space is a compressed, meaningful representation that captures the <em>essence</em> of the data in far fewer numbers.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🧬</span>
+    <div class="analogy-title">Analogy — DNA as a Latent Space</div>
+    <p>Your entire body has trillions of cells, but it's all encoded in ~3 billion DNA base pairs. DNA is the latent space of a human — a compressed code that can reconstruct the entire organism. Similarly, a 512-dimensional latent vector <strong>z</strong> encodes the "essence" of a 256×256 image. Change one number in z slightly = change the lighting. Change another = change the expression.</p>
+  </div>
+
+  <h3>Why High-Dimensional Data is Problematic</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-red)">❌ Raw Pixel Space</h4>
+      <ul>
+        <li>256×256×3 = 196,608 dimensions</li>
+        <li>Mostly redundant (wall = all 0s)</li>
+        <li>Computationally insane</li>
+        <li>Noise mixed with signal</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-teal)">✅ Latent Space z</h4>
+      <ul>
+        <li>Say 128-dimensional vector</li>
+        <li>Each dimension is meaningful</li>
+        <li>z₁ ≈ pose, z₂ ≈ lighting, z₃ ≈ age</li>
+        <li>z ~ N(0, I) → sample → new data!</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>The "Holes" Problem with Old Methods</h3>
+  <p>Classical methods (PCA, Factor Analysis, etc.) create a latent space for <em>understanding</em> data, but the latent space has <strong>holes</strong> — large empty regions. If you randomly sample a point from such a space and try to decode it, you'll get garbage output.</p>
+
+  <div class="flowchart-wrap">
+    <svg width="760" height="160" viewBox="0 0 760 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="160" fill="#0d1118" rx="12"/>
+      <!-- Old latent space -->
+      <text x="185" y="22" text-anchor="middle" fill="#5e7291" font-family="Syne,sans-serif" font-size="12" font-weight="700">Old Methods (PCA, FA...)</text>
+      <rect x="20" y="32" width="330" height="110" rx="10" fill="#141b24" stroke="#222d3d" stroke-width="1.5"/>
+      <!-- Data clusters -->
+      <circle cx="80" cy="80" r="20" fill="rgba(45,212,191,0.15)" stroke="rgba(45,212,191,0.5)" stroke-width="1.5"/>
+      <circle cx="80" cy="80" r="5" fill="#2dd4bf"/>
+      <circle cx="160" cy="60" r="15" fill="rgba(45,212,191,0.15)" stroke="rgba(45,212,191,0.5)" stroke-width="1.5"/>
+      <circle cx="160" cy="60" r="4" fill="#2dd4bf"/>
+      <circle cx="250" cy="100" r="25" fill="rgba(45,212,191,0.15)" stroke="rgba(45,212,191,0.5)" stroke-width="1.5"/>
+      <circle cx="250" cy="100" r="5" fill="#2dd4bf"/>
+      <circle cx="310" cy="55" r="12" fill="rgba(45,212,191,0.15)" stroke="rgba(45,212,191,0.5)" stroke-width="1.5"/>
+      <!-- Hole markers -->
+      <text x="195" y="90" text-anchor="middle" fill="#f87171" font-size="28">✗</text>
+      <text x="185" y="145" text-anchor="middle" fill="#5e7291" font-size="10" font-family="Inter,sans-serif">Sparse clusters + big "holes" = random sampling → garbage</text>
+
+      <!-- Arrow -->
+      <text x="375" y="90" text-anchor="middle" fill="#5e7291" font-size="22">→</text>
+
+      <!-- Desired structured latent -->
+      <text x="570" y="22" text-anchor="middle" fill="#2dd4bf" font-family="Syne,sans-serif" font-size="12" font-weight="700">Desired (VAE, GAN...)</text>
+      <rect x="410" y="32" width="330" height="110" rx="10" fill="#141b24" stroke="#2dd4bf" stroke-width="1.5"/>
+      <!-- Dense Gaussian blob -->
+      <ellipse cx="575" cy="87" rx="120" ry="50" fill="rgba(45,212,191,0.08)" stroke="rgba(45,212,191,0.3)" stroke-width="1.5"/>
+      <ellipse cx="575" cy="87" rx="80" ry="33" fill="rgba(45,212,191,0.1)" stroke="rgba(45,212,191,0.25)" stroke-width="1"/>
+      <ellipse cx="575" cy="87" rx="40" ry="17" fill="rgba(45,212,191,0.15)" stroke="rgba(45,212,191,0.4)" stroke-width="1"/>
+      <circle cx="575" cy="87" r="5" fill="#2dd4bf"/>
+      <!-- Random sample point -->
+      <circle cx="530" cy="75" r="5" fill="#4ade80"/>
+      <circle cx="620" cy="100" r="5" fill="#4ade80"/>
+      <text x="570" y="148" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="Inter,sans-serif">Continuous Gaussian blob → any z gives valid sample ✓</text>
+    </svg>
+  </div>
+
+  <h3>The Data Manifold — Why We Can't Just Sample Pixels</h3>
+  <p>Of all possible 256×256 images (256^196608 possibilities), the ones that look like real photos occupy a <em>tiny curved surface</em> — a <strong>manifold</strong> — in that enormous space. Generative models learn to map a simple distribution (Gaussian noise z) onto this manifold.</p>
+
+  <div class="formula">Pixel space for 256×256×3 = 196,608 dimensions
+Possible configurations = 256^196,608 ≈ insanely large number
+
+Of all these... "cat images" occupy a tiny sub-manifold.
+Random pixels → 99.9999% nonsense.
+
+Deep generative model solution:
+  1. Sample from simple distribution: z ~ N(0, I)   [say 128-D]
+  2. Apply learned generator G: x = G(z)             [outputs 196,608-D image]
+  3. G maps the Gaussian blob → the data manifold!
+  → Every z gives a valid (approximately) realistic image</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="2">
+      <p>Why is the latent space of classical methods (like PCA) not ideal for generating new data?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> PCA latent spaces are too high-dimensional</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> PCA cannot handle image data at all</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> It has "holes" — large empty regions where random sampling gives garbage output</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> The PCA latent space is always 2-dimensional</div>
+      </div>
+      <div class="quiz-feedback">Classical methods create latent spaces that are sparse — data clusters in a few regions with big empty holes in between. A random z sampled from anywhere may land in a hole, which the decoder has never seen. Modern methods (VAE, GAN) enforce that the entire latent space is densely covered, usually as a Gaussian blob.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: CLASSICAL METHODS -->
+<div class="section blue" id="classical">
+  <div class="section-label lbl-blue">7.1 · Classical Methods</div>
+  <h2>PCA, Factor Analysis, LDA & SVD</h2>
+  <p>Before deep learning, people used elegant mathematical tools to discover latent structure in data. These are still used and appear in ML theory frequently.</p>
+
+  <h3>PCA — Principal Component Analysis</h3>
+  <div class="analogy">
+    <span class="analogy-icon">📐</span>
+    <div class="analogy-title">Analogy — Shadow on a Wall</div>
+    <p>Hold a 3D object in front of a light. Its 2D shadow on the wall captures most of the shape with fewer dimensions. PCA finds the best "angle" to project data so the shadow (lower-dimensional version) captures maximum variance. The principal components are like the axes of the best shadow.</p>
+  </div>
+  <div class="formula">PCA: Find directions (principal components PC1, PC2, ...) that capture maximum variance.
+
+Toy example: 2D data (height, weight) of people.
+Most variance is along the diagonal (tall people tend to weigh more).
+  PC1 ≈ "overall body size"  [captures most variance]
+  PC2 ≈ "height/weight ratio" [captures remaining variance]
+
+Projecting onto PC1 only → 1D latent space!
+Applications: Dimensionality reduction, noise removal, visualization, 
+             "Eigenfaces" (face recognition)</div>
+
+  <h3>Factor Analysis — Hidden Traits Behind Test Scores</h3>
+  <div class="formula">Model: x = Λf + ε
+  x = observed variables (e.g., test scores)
+  f = latent factors (e.g., "math ability", "memory")
+  Λ = factor loadings (how much each factor influences each test)
+  ε = noise/unexplained part
+
+Numerical Example (2 factors, 3 tests):
+  Λ = [[0.9, 0.1],   ← Algebra (mostly math)
+       [0.8, 0.2],   ← Word problems (math + some memory)
+       [0.2, 0.9]]   ← Memory test (mostly memory)
+
+For student with f₁(math)=7, f₂(memory)=5:
+  x₁ = 0.9×7 + 0.1×5 = 6.3 + 0.5 = 6.8   (Algebra score)
+  x₂ = 0.8×7 + 0.2×5 = 5.6 + 1.0 = 6.6   (Word problems)
+  x₃ = 0.2×7 + 0.9×5 = 1.4 + 4.5 = 5.9   (Memory test)
+  
+Insight: Algebra & Word Problems high → because math factor is strong!</div>
+
+  <h3>LDA — Latent Dirichlet Allocation (Topic Modeling)</h3>
+  <p><strong>Warning:</strong> This is <em>not</em> Linear Discriminant Analysis! This LDA is for text — it discovers hidden topics in a collection of documents.</p>
+  <div class="analogy">
+    <span class="analogy-icon">📰</span>
+    <div class="analogy-title">Analogy — Mixing Paint</div>
+    <p>Every news article is like a paint mixture: 70% Sports blue + 30% Politics red. LDA automatically finds what colors (topics) exist, and how much of each color each article contains — without being told what the topics are beforehand!</p>
+  </div>
+  <div class="formula">LDA key ideas:
+  - Topic = probability distribution over words
+  - Document = mixture of topics
+
+Topic 1 (Sports):  P("match")=0.2, P("player")=0.3, P("score")=0.25, ...
+Topic 2 (Politics): P("election")=0.25, P("vote")=0.2, P("party")=0.15, ...
+
+Document "The player scored in the final match":
+  θ_doc = [0.9 Sports, 0.1 Politics]
+
+Latent representation of the document = θ_doc = [0.9, 0.1]
+(This is the latent vector!)</div>
+
+  <h3>Matrix Factorization & SVD — Netflix-Style Recommendations</h3>
+  <div class="example">
+    <div class="example-title">🔢 Matrix Factorization — Recommend Movies</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">R ≈ U·Vᵀ where U = user latent factors, V = movie latent factors</p>
+    <table>
+      <tr><th></th><th>Movie 1</th><th>Movie 2</th></tr>
+      <tr><td>User 1 (rating)</td><td>6</td><td>8</td></tr>
+      <tr><td>User 2 (rating)</td><td>3</td><td>4</td></tr>
+    </table>
+    <p style="font-size:0.88rem; margin:0.75rem 0 0.5rem;">Factorize R ≈ U·Vᵀ with latent dim = 1:</p>
+    <div class="formula" style="margin:0; font-size:0.82rem">Try: U = [2, 1]ᵀ (latent taste scores), V = [3, 4]ᵀ (latent quality scores)
+
+Check: U·Vᵀ = [[2×3, 2×4], [1×3, 1×4]] = [[6, 8], [3, 4]] ✅ Perfect!
+
+User 1 has latent score 2 (high interest), User 2 has 1 (lower interest)
+Movie 1 has latent quality 3, Movie 2 has 4
+
+Missing rating? Just compute u_i · v_j = predicted rating!</div>
+    <div class="result">This is how Netflix/Amazon predict "You might like..." — your latent taste vector × movie's latent quality vector!</div>
+  </div>
+
+  <div class="formula">SVD (Singular Value Decomposition): A = U · Σ · Vᵀ
+  U = left singular vectors (m×m orthogonal)
+  Σ = diagonal matrix of singular values σ₁ ≥ σ₂ ≥ ... ≥ 0
+  Vᵀ = right singular vectors (n×n orthogonal)
+
+Low-rank approximation: Keep only top-K singular values:
+  A ≈ Σₖ σₖ uₖ vₖᵀ   (sum of K rank-1 matrices)
+
+Example: A = [[3,0],[0,1]]
+  Σ = diag(3,1), U = I, V = I
+  Keep only top-1 singular value: A ≈ [[3,0],[0,0]]
+  → Second dimension ignored → dimensionality reduction!</div>
+
+  <div class="summary" style="border-color:rgba(77,159,255,0.22)">
+    <div class="summary-title" style="color:var(--accent-blue)">🔗 Common Theme in All Classical Methods</div>
+    <ul>
+      <li><strong>Factor Analysis:</strong> x = Λf + ε — observed = weighted sum of hidden factors</li>
+      <li><strong>LDA:</strong> document = mixture of topics; topic = distribution over words</li>
+      <li><strong>Matrix Factorization / SVD:</strong> Big R ≈ U·Vᵀ — user/item latent vectors</li>
+      <li><strong>All share:</strong> "High-dimensional observations ≈ few hidden dimensions explain everything"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION: GENERATIVE MODEL TAXONOMY -->
+<div class="section purple" id="genmodels">
+  <div class="section-label lbl-purple">7.3 · Taxonomy</div>
+  <h2>The Complete Generative Model Family Tree</h2>
+  <p>How does a generative model relate to p(x)? This is the key question that splits the whole family:</p>
+
+  <!-- Taxonomy SVG -->
+  <div class="flowchart-wrap">
+    <svg width="760" height="280" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="280" fill="#0d1118" rx="12"/>
+      <!-- Root -->
+      <rect x="280" y="10" width="200" height="44" rx="8" fill="#141b24" stroke="#a78bfa" stroke-width="2"/>
+      <text x="380" y="28" text-anchor="middle" fill="#a78bfa" font-family="Syne,sans-serif" font-size="12" font-weight="700">Generative Models</text>
+      <text x="380" y="44" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="10">Learn p(x) to generate data</text>
+
+      <!-- Level 1 branches -->
+      <line x1="300" y1="54" x2="185" y2="90" stroke="#a78bfa" stroke-width="1.5"/>
+      <line x1="460" y1="54" x2="575" y2="90" stroke="#a78bfa" stroke-width="1.5"/>
+
+      <!-- Explicit Density -->
+      <rect x="90" y="90" width="190" height="40" rx="8" fill="#141b24" stroke="#4d9fff" stroke-width="1.5"/>
+      <text x="185" y="107" text-anchor="middle" fill="#4d9fff" font-family="Syne,sans-serif" font-size="11" font-weight="700">Explicit Density</text>
+      <text x="185" y="122" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">p(x) formula available</text>
+
+      <!-- Implicit Density -->
+      <rect x="480" y="90" width="190" height="40" rx="8" fill="#141b24" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="575" y="107" text-anchor="middle" fill="#f472b6" font-family="Syne,sans-serif" font-size="11" font-weight="700">Implicit Density</text>
+      <text x="575" y="122" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">Only sample, no p(x)</text>
+
+      <!-- Explicit branches -->
+      <line x1="145" y1="130" x2="85" y2="165" stroke="#4d9fff" stroke-width="1.5"/>
+      <line x1="225" y1="130" x2="285" y2="165" stroke="#4d9fff" stroke-width="1.5"/>
+
+      <!-- Tractable -->
+      <rect x="10" y="165" width="150" height="60" rx="8" fill="#141b24" stroke="#2dd4bf" stroke-width="1.5"/>
+      <text x="85" y="183" text-anchor="middle" fill="#2dd4bf" font-family="Syne,sans-serif" font-size="11" font-weight="700">Tractable</text>
+      <text x="85" y="197" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">p(x) exact</text>
+      <text x="85" y="211" text-anchor="middle" fill="#4ade80" font-family="Inter,sans-serif" font-size="9">PixelRNN · Flows</text>
+
+      <!-- Approximate -->
+      <rect x="215" y="165" width="150" height="60" rx="8" fill="#141b24" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="290" y="183" text-anchor="middle" fill="#fbbf24" font-family="Syne,sans-serif" font-size="11" font-weight="700">Approximate</text>
+      <text x="290" y="197" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">p(x) proxy (ELBO)</text>
+      <text x="290" y="211" text-anchor="middle" fill="#fbbf24" font-family="Inter,sans-serif" font-size="9">VAE · Diffusion</text>
+
+      <!-- GAN -->
+      <rect x="490" y="140" width="170" height="65" rx="8" fill="#141b24" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="575" y="160" text-anchor="middle" fill="#f472b6" font-family="Syne,sans-serif" font-size="12" font-weight="700">GAN ⭐</text>
+      <text x="575" y="175" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">z → G(z) = x</text>
+      <text x="575" y="190" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">No p(x), only samples</text>
+      <text x="575" y="205" text-anchor="middle" fill="#f472b6" font-family="Inter,sans-serif" font-size="9">Sharp realistic outputs</text>
+
+      <!-- Bottom labels -->
+      <rect x="10" y="245" width="740" height="28" rx="6" fill="#141b24" stroke="#222d3d" stroke-width="1"/>
+      <text x="380" y="255" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9.5">All models share core idea: z ~ N(0,I) → Neural Net → x (realistic data sample)</text>
+      <text x="380" y="267" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9.5">Difference: how they train and whether they give you an explicit probability p(x)</text>
+    </svg>
+  </div>
+
+  <table class="compare-table">
+    <tr><th>Type</th><th>Can compute p(x)?</th><th>Examples</th><th>Pros</th><th>Cons</th></tr>
+    <tr><td><mark class="teal">Tractable Explicit</mark></td><td><span class="badge badge-green">Yes, exact</span></td><td>PixelRNN, PixelCNN, Normalizing Flows</td><td>Clean theory, exact likelihood</td><td>Slow sampling, heavy compute</td></tr>
+    <tr><td><mark class="yellow">Approx Explicit</mark></td><td><span class="badge badge-yellow">Yes, approx (ELBO)</span></td><td>VAE, Diffusion Models</td><td>Good balance, stable training</td><td>Likelihood is indirect/approx</td></tr>
+    <tr><td><mark class="pink">Implicit</mark></td><td><span class="badge badge-red">No</span></td><td>GAN</td><td>Super sharp realistic samples</td><td>Training unstable, no likelihood</td></tr>
+  </table>
+
+  <h3>Autoregressive Models — Exact p(x) via Chain Rule</h3>
+  <div class="formula">Key idea: Factor the joint distribution using the chain rule:
+  P(x₁, x₂, ..., xₜ) = P(x₁) · P(x₂|x₁) · P(x₃|x₁,x₂) · ... · P(xₜ|x₁,...,xₜ₋₁)
+
+Each conditional P(xₜ | x<t) is learned by a neural network.
+→ We get the EXACT joint probability!
+
+Numerical example (3 binary variables):
+  P(x₁=1) = 0.7
+  P(x₂=1 | x₁=1) = 0.6
+  P(x₃=1 | x₁=1, x₂=1) = 0.9
+
+  P(x₁=1, x₂=1, x₃=1) = 0.7 × 0.6 × 0.9 = 0.378 ← exact!
+
+Examples: PixelCNN, GPT, WaveNet, Gemini</div>
+
+  <h3>Normalizing Flows — Invertible Mapping</h3>
+  <div class="formula">Start with simple distribution: z ~ N(0,1)
+Learn invertible function f such that: x = f(z)
+
+Because f is invertible: z = f⁻¹(x) → can compute exact p(x)!
+Formula (change of variables):
+  pX(x) = pZ(f⁻¹(x)) · |df⁻¹/dx|
+
+Numerical 1D Example:
+  f(z) = 2z + 1  (simple invertible transform)
+  f⁻¹(x) = (x-1)/2,   df⁻¹/dx = 1/2
+
+  Want pX(3):
+    z = (3-1)/2 = 1
+    pZ(1) = (1/√2π) · e^(-0.5) ≈ 0.242
+    pX(3) = 0.242 × 0.5 ≈ 0.121 ← exact probability!</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="1">
+      <p>What makes autoregressive models "tractable explicit" density models?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> They use invertible neural networks</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> They factor p(x) via the chain rule, giving an exact computable probability</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> They approximate p(x) using variational inference</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> They use a discriminator to estimate probability</div>
+      </div>
+      <div class="quiz-feedback">Autoregressive models write p(x) = ∏ P(xₜ|x<t). Each conditional factor is a neural network output. The product gives the EXACT joint probability — no approximation needed. This is what makes it "tractable."</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: AE & VAE -->
+<div class="section green" id="ae-vae">
+  <div class="section-label lbl-green">7.2 · Models</div>
+  <h2>Autoencoder (AE) → Variational Autoencoder (VAE)</h2>
+
+  <h3>Autoencoder — Compress and Reconstruct</h3>
+  <div class="gan-flow">
+    <div class="gan-node" style="border-color:var(--accent-blue)">
+      <div class="gn-title" style="color:var(--accent-blue)">Input x</div>
+      <div class="gn-sub">784-D MNIST image</div>
+    </div>
+    <div class="gan-arrow">→</div>
+    <div class="gan-node" style="border-color:var(--accent-teal)">
+      <div class="gn-title" style="color:var(--accent-teal)">Encoder</div>
+      <div class="gn-sub">f_enc(x)</div>
+    </div>
+    <div class="gan-arrow">→</div>
+    <div class="gan-node" style="border-color:var(--accent-yellow)">
+      <div class="gn-title" style="color:var(--accent-yellow)">Latent z</div>
+      <div class="gn-sub">16-D vector<br>compressed!</div>
+    </div>
+    <div class="gan-arrow">→</div>
+    <div class="gan-node" style="border-color:var(--accent-orange)">
+      <div class="gn-title" style="color:var(--accent-orange)">Decoder</div>
+      <div class="gn-sub">f_dec(z)</div>
+    </div>
+    <div class="gan-arrow">→</div>
+    <div class="gan-node" style="border-color:var(--accent-green)">
+      <div class="gn-title" style="color:var(--accent-green)">x̂ (reconstructed)</div>
+      <div class="gn-sub">Want x̂ ≈ x</div>
+    </div>
+  </div>
+
+  <div class="formula">AE Loss = Reconstruction error:
+  L_recon = ‖x − x̂‖²
+
+Numerical Example:
+  x = [1, 0, 0],   x̂ = [0.8, 0.1, 0.0]
+  L = (1-0.8)² + (0-0.1)² + (0-0.0)² = 0.04 + 0.01 + 0 = 0.05
+
+Problem: Latent space has NO distribution constraint!
+  Randomly sample z → decoder has never seen it → garbage output
+  AE = good for compression, BAD for generation.</div>
+
+  <h3>VAE — Adding a Gaussian Constraint on the Latent Space</h3>
+  <p>VAE fixes AE's problem by forcing the encoder to output a <em>distribution</em>, not a single point, and regularizing that distribution to be close to a standard Gaussian.</p>
+
+  <div class="flowchart-wrap">
+    <svg width="760" height="155" viewBox="0 0 760 155" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="155" fill="#0d1118" rx="12"/>
+      <!-- AE row -->
+      <text x="10" y="28" fill="#5e7291" font-size="10" font-family="Syne,sans-serif" font-weight="700">AE:</text>
+      <rect x="35" y="12" width="60" height="32" rx="6" fill="#141b24" stroke="#4d9fff" stroke-width="1.5"/>
+      <text x="65" y="24" text-anchor="middle" fill="#4d9fff" font-size="9" font-family="Inter,sans-serif" font-weight="600">x</text>
+      <text x="65" y="37" text-anchor="middle" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">input</text>
+      <line x1="95" y1="28" x2="120" y2="28" stroke="#5e7291" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <defs><marker id="arrG" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#5e7291"/></marker></defs>
+      <rect x="120" y="12" width="80" height="32" rx="6" fill="#141b24" stroke="#2dd4bf" stroke-width="1.5"/>
+      <text x="160" y="30" text-anchor="middle" fill="#2dd4bf" font-size="9.5" font-family="Inter,sans-serif" font-weight="600">z = f_enc(x)</text>
+      <line x1="200" y1="28" x2="220" y2="28" stroke="#5e7291" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <text x="240" y="30" text-anchor="middle" fill="#fbbf24" font-size="9" font-family="Inter,sans-serif">→ single point</text>
+      <text x="350" y="30" fill="#f87171" font-size="9" font-family="Inter,sans-serif">No distribution constraint ❌</text>
+
+      <!-- VAE row -->
+      <text x="10" y="82" fill="#4ade80" font-size="10" font-family="Syne,sans-serif" font-weight="700">VAE:</text>
+      <rect x="35" y="66" width="60" height="32" rx="6" fill="#141b24" stroke="#4d9fff" stroke-width="1.5"/>
+      <text x="65" y="78" text-anchor="middle" fill="#4d9fff" font-size="9" font-family="Inter,sans-serif" font-weight="600">x</text>
+      <text x="65" y="91" text-anchor="middle" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">input</text>
+      <line x1="95" y1="82" x2="120" y2="82" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <rect x="120" y="66" width="110" height="32" rx="6" fill="#141b24" stroke="#2dd4bf" stroke-width="1.5"/>
+      <text x="175" y="79" text-anchor="middle" fill="#2dd4bf" font-size="9.5" font-family="Inter,sans-serif" font-weight="600">μ(x), σ(x)</text>
+      <text x="175" y="92" text-anchor="middle" fill="#5e7291" font-size="8.5" font-family="Inter,sans-serif">distribution params</text>
+      <line x1="230" y1="82" x2="260" y2="82" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <rect x="260" y="66" width="100" height="32" rx="6" fill="#141b24" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="310" y="79" text-anchor="middle" fill="#fbbf24" font-size="9" font-family="Inter,sans-serif" font-weight="600">z = μ + σ·ε</text>
+      <text x="310" y="92" text-anchor="middle" fill="#5e7291" font-size="8.5" font-family="Inter,sans-serif">ε ~ N(0,I) sample</text>
+      <line x1="360" y1="82" x2="385" y2="82" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <rect x="385" y="66" width="70" height="32" rx="6" fill="#141b24" stroke="#fb923c" stroke-width="1.5"/>
+      <text x="420" y="79" text-anchor="middle" fill="#fb923c" font-size="9" font-family="Inter,sans-serif" font-weight="600">decoder</text>
+      <text x="420" y="92" text-anchor="middle" fill="#5e7291" font-size="8.5" font-family="Inter,sans-serif">→ x̂</text>
+      <line x1="455" y1="82" x2="475" y2="82" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrG)"/>
+      <rect x="475" y="66" width="90" height="32" rx="6" fill="#141b24" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="520" y="79" text-anchor="middle" fill="#4ade80" font-size="9" font-family="Inter,sans-serif" font-weight="600">+KL penalty</text>
+      <text x="520" y="92" text-anchor="middle" fill="#5e7291" font-size="8.5" font-family="Inter,sans-serif">q(z|x) ≈ N(0,I)</text>
+      <text x="600" y="82" fill="#4ade80" font-size="9" font-family="Inter,sans-serif">Latent space ≈ Gaussian! ✅</text>
+
+      <!-- Generation row -->
+      <text x="10" y="135" fill="#a78bfa" font-size="10" font-family="Syne,sans-serif" font-weight="700">Gen:</text>
+      <text x="35" y="138" fill="#5e7291" font-size="9.5" font-family="Inter,sans-serif">z ~ N(0,I)  →  Decoder  →  New realistic x   (works now because latent ≈ Gaussian!)</text>
+    </svg>
+  </div>
+
+  <div class="formula">VAE Loss = Reconstruction Loss + KL Divergence penalty:
+
+  L = E[‖x − x̂‖²]        ← "remember the original data"
+    + D_KL(q(z|x) ‖ p(z))  ← "keep latent space close to N(0,I)"
+
+KL Divergence intuition (1D case):
+  p(z) = N(0,1) [target/prior]
+  q(z|x) = N(μ, σ²) [encoder output]
+
+  If μ=0, σ=1: KL = 0  ✅ (perfect match to prior)
+  If μ=2, σ=1: KL > 0  ❌ (shifted away, penalty applied)
+  If μ=0, σ=0.1: KL > 0  ❌ (too narrow, penalty applied)
+
+VAE training forces the encoder to stay near N(0,I) in latent space
+→ After training, any z ~ N(0,I) gives a valid-ish reconstruction!
+
+Reparameterization trick: z = μ(x) + σ(x) ⊙ ε,  ε ~ N(0,I)
+  → Allows gradients to flow back through the sampling operation!</div>
+
+  <div class="callout">
+    <strong>💡 VAE = AE + Probabilistic Latent Space.</strong> AE learns a deterministic point z per input. VAE learns a distribution q(z|x) per input, regularized to be ~N(0,1). This fills in the "holes" and makes random sampling meaningful.
+  </div>
+</div>
+
+<!-- SECTION: GAN -->
+<div class="section pink" id="gan">
+  <div class="section-label lbl-pink">7.4 · Core Model</div>
+  <h2>GAN — The Adversarial Game</h2>
+
+  <div class="analogy">
+    <span class="analogy-icon">🎭</span>
+    <div class="analogy-title">Analogy — Counterfeiter vs. Detective</div>
+    <p><strong>Generator G</strong> = Counterfeiter: tries to print fake currency that looks real.<br><strong>Discriminator D</strong> = Detective: tries to spot the fake bills.<br><br>As the detective gets better at spotting fakes, the counterfeiter must improve. As the counterfeiter improves, the detective must sharpen their skills further. This competition drives both to excellence — until the counterfeiter's fakes are indistinguishable from real currency!</p>
+  </div>
+
+  <!-- GAN Architecture Diagram -->
+  <div class="flowchart-wrap">
+    <svg width="760" height="190" viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrW" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5e7291"/></marker>
+        <marker id="arrG2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4ade80"/></marker>
+        <marker id="arrR2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f87171"/></marker>
+      </defs>
+      <rect width="760" height="190" fill="#0d1118" rx="12"/>
+      <!-- Top: Real data path -->
+      <text x="20" y="28" fill="#4d9fff" font-size="10" font-family="Syne,sans-serif" font-weight="700">REAL DATA PATH</text>
+      <rect x="20" y="35" width="100" height="40" rx="8" fill="#141b24" stroke="#4d9fff" stroke-width="1.5"/>
+      <text x="70" y="55" text-anchor="middle" fill="#4d9fff" font-size="10" font-family="Syne,sans-serif" font-weight="700">Dataset</text>
+      <text x="70" y="69" text-anchor="middle" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">real images x</text>
+      <line x1="120" y1="55" x2="350" y2="55" stroke="#4d9fff" stroke-width="1.5" stroke-dasharray="none" marker-end="url(#arrW)"/>
+
+      <!-- Bottom: Fake data path -->
+      <text x="20" y="118" fill="#f472b6" font-size="10" font-family="Syne,sans-serif" font-weight="700">FAKE DATA PATH</text>
+      <rect x="20" y="125" width="100" height="40" rx="8" fill="#141b24" stroke="#f472b6" stroke-width="1.5"/>
+      <text x="70" y="143" text-anchor="middle" fill="#f472b6" font-size="10" font-family="Syne,sans-serif" font-weight="700">Noise z</text>
+      <text x="70" y="157" text-anchor="middle" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">z ~ N(0,I)</text>
+      <line x1="120" y1="145" x2="180" y2="145" stroke="#f472b6" stroke-width="1.5" marker-end="url(#arrW)"/>
+      <rect x="180" y="125" width="110" height="40" rx="8" fill="#141b24" stroke="#f472b6" stroke-width="2"/>
+      <text x="235" y="143" text-anchor="middle" fill="#f472b6" font-family="Syne,sans-serif" font-size="12" font-weight="700">Generator G</text>
+      <text x="235" y="157" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">G(z) = fake image</text>
+      <line x1="290" y1="145" x2="350" y2="145" stroke="#f472b6" stroke-width="1.5" marker-end="url(#arrW)"/>
+
+      <!-- Discriminator -->
+      <rect x="350" y="35" width="130" height="150" rx="8" fill="#141b24" stroke="#fbbf24" stroke-width="2"/>
+      <text x="415" y="88" text-anchor="middle" fill="#fbbf24" font-family="Syne,sans-serif" font-size="12" font-weight="700">Discriminator</text>
+      <text x="415" y="105" text-anchor="middle" fill="#fbbf24" font-family="Syne,sans-serif" font-size="12" font-weight="700">D</text>
+      <text x="415" y="123" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">real or fake?</text>
+      <text x="415" y="137" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">D(x) ∈ [0,1]</text>
+      <text x="415" y="152" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">→1: real, →0: fake</text>
+
+      <!-- Output -->
+      <rect x="525" y="70" width="100" height="50" rx="8" fill="#141b24" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="575" y="91" text-anchor="middle" fill="#4ade80" font-family="Syne,sans-serif" font-size="11" font-weight="700">Real (1)</text>
+      <text x="575" y="108" text-anchor="middle" fill="#4ade80" font-family="Inter,sans-serif" font-size="9">D(x_real) → 1</text>
+      <line x1="480" y1="80" x2="523" y2="87" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrG2)"/>
+
+      <rect x="525" y="135" width="100" height="50" rx="8" fill="#141b24" stroke="#f87171" stroke-width="1.5"/>
+      <text x="575" y="156" text-anchor="middle" fill="#f87171" font-family="Syne,sans-serif" font-size="11" font-weight="700">Fake (0)</text>
+      <text x="575" y="173" text-anchor="middle" fill="#f87171" font-family="Inter,sans-serif" font-size="9">D(G(z)) → 0</text>
+      <line x1="480" y1="148" x2="523" y2="148" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrR2)"/>
+
+      <!-- Gradient feedback -->
+      <path d="M625,155 Q700,155 700,180 Q700,188 350,188 Q250,188 235,168" stroke="#f472b6" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrW)"/>
+      <text x="460" y="185" text-anchor="middle" fill="#f472b6" font-size="9" font-family="Inter,sans-serif">Gradients update G to fool D next time</text>
+    </svg>
+  </div>
+
+  <h3>The Math: Minimax Objective</h3>
+  <div class="formula">min_G  max_D  V(D,G) = E[log D(x)] + E[log(1 − D(G(z)))]
+
+Discriminator D wants to MAXIMIZE this:
+  → D(real) → 1:  log(1) = 0     (good)
+  → D(fake) → 0:  log(1-0) = 0   (good)
+
+Generator G wants to MINIMIZE this:
+  → Make D(G(z)) → 1:  log(1-1) = -∞  (minimize → maximize D's confusion)
+
+Practical G objective (avoid vanishing gradient!):
+  Instead of: minimize log(1 - D(G(z)))    ← gradient ≈ 0 when D is confident
+  Use:        maximize log(D(G(z)))         ← strong gradient even when D is sure</div>
+
+  <div class="example">
+    <div class="example-title">🔢 D Loss Numerical Example</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Batch: 2 real images, 2 fake images</p>
+    <table>
+      <tr><th>Image type</th><th>D score</th><th>Contribution to D loss</th></tr>
+      <tr><td>Real x₁</td><td>D(x₁) = 0.9</td><td>log(0.9) ≈ −0.105</td></tr>
+      <tr><td>Real x₂</td><td>D(x₂) = 0.8</td><td>log(0.8) ≈ −0.223</td></tr>
+      <tr><td>Fake G(z₁)</td><td>D(G(z₁)) = 0.2</td><td>log(1−0.2) = log(0.8) ≈ −0.223</td></tr>
+      <tr><td>Fake G(z₂)</td><td>D(G(z₂)) = 0.1</td><td>log(1−0.1) = log(0.9) ≈ −0.105</td></tr>
+    </table>
+    <div class="result">D loss = −(sum of all log terms). D is doing well here (real→high, fake→low). If D gives real=0.4, fake=0.7, the log terms become very negative → large loss → D forced to improve!</div>
+  </div>
+
+  <h3>GAN Training Loop (Alternating Optimization)</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num teal">1</div>
+      <div class="step-body"><strong>Train Discriminator D</strong> (freeze G): Sample real batch x_real from dataset. Generate fake batch x_fake = G(z). Update D to correctly label real→1 and fake→0. L_D = −[log D(x_real) + log(1 − D(x_fake))]</div>
+    </div>
+    <div class="step">
+      <div class="step-num pink">2</div>
+      <div class="step-body"><strong>Train Generator G</strong> (freeze D): Sample new noise z. Generate x_fake = G(z). Update G to make D think fake is real. L_G = −log D(G(z))  [non-saturating version]</div>
+    </div>
+    <div class="step">
+      <div class="step-num purple">3</div>
+      <div class="step-body"><strong>Ideal end state</strong>: G has learned P_g(x) ≈ P_data(x). D can't distinguish real from fake → D(x) = 0.5 everywhere. This is called the Nash Equilibrium.</div>
+    </div>
+  </div>
+
+  <h3>DCGAN — Making GANs Work for Images</h3>
+  <table class="compare-table">
+    <tr><th>DCGAN Rule</th><th>Why?</th></tr>
+    <tr><td>Use strided convolutions instead of MaxPooling</td><td>Learnable downsampling = more control</td></tr>
+    <tr><td>Generator uses Transpose Convolution (upsampling)</td><td>4×4 → 8×8 → ... → 64×64</td></tr>
+    <tr><td>Batch Normalization in both G and D</td><td>Stabilizes training</td></tr>
+    <tr><td>G hidden: ReLU; G output: tanh</td><td>tanh keeps image values in [−1,1]</td></tr>
+    <tr><td>D all layers: Leaky ReLU</td><td>Prevents vanishing gradients in D</td></tr>
+  </table>
+
+  <h3>StyleGAN — Controlling What the Generator Creates</h3>
+  <div class="formula">Normal GAN: z → Generator → image   (hard to control what changes)
+
+StyleGAN: z → Mapping Network (8 FC layers) → w → style vectors per layer → image
+
+Key innovations:
+  1. Mapping network: z (entangled) → w (disentangled latent)
+     w = more organized: moving w₁ changes ONLY hairstyle, w₂ changes ONLY age, etc.
+  
+  2. AdaIN (Adaptive Instance Normalization) per layer:
+     Feature map → normalize → scale & shift by style vector A(w)
+     → Controls what attribute that layer encodes
+  
+  3. Per-layer noise injection:
+     Random noise added at each resolution
+     → Controls fine details: freckles, hair strands, pores
+     (Separate from global style)
+
+Result: Incredibly realistic, fully controllable face generation!</div>
+
+  <h3>GAN Problems & Fixes</h3>
+  <table class="compare-table">
+    <tr><th>Problem</th><th>What Happens</th><th>Fix</th></tr>
+    <tr><td><mark class="red">Mode Collapse</mark></td><td>G generates only 1-2 types of output (e.g., always "3" for MNIST digits)</td><td>Mini-batch discrimination, WGAN</td></tr>
+    <tr><td><mark class="red">Non-convergence</mark></td><td>G and D keep oscillating, never settle</td><td>Careful LR tuning, gradient penalty</td></tr>
+    <tr><td><mark class="red">Vanishing Gradient for G</mark></td><td>D too strong → D(G(z))≈0 → G gradient=0 → G can't learn</td><td>Non-saturating G loss (maximize log D(G(z)))</td></tr>
+    <tr><td><mark class="red">Hyperparameter sensitivity</mark></td><td>Very sensitive to LR, batch size, architecture</td><td>Progressive growing, spectral norm</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <strong>💡 WGAN (Wasserstein GAN):</strong> Uses "Earth Mover's Distance" instead of JS divergence. This metric is smooth even when distributions don't overlap → no vanishing gradients, better mode coverage, more stable training. The discriminator becomes a "critic" that outputs a score (not a probability).
+  </div>
+
+  <!-- Diffusion Brief -->
+  <h3>Diffusion Models — Forward Noise + Learn to Reverse</h3>
+  <div class="analogy">
+    <span class="analogy-icon">🌫️</span>
+    <div class="analogy-title">Analogy — Watercolor Smearing and Un-smearing</div>
+    <p><strong>Forward process:</strong> Take a crisp painting and add a tiny bit of water. Then again. Then again... 1000 steps later it's just a uniform gray blur (pure Gaussian noise).<br><strong>Reverse process:</strong> A neural network learns to UN-smear — given a slightly blurry image, predict the slightly less blurry version. After 1000 reverse steps, you get a crisp new painting! Stable Diffusion, DALL·E 3, and Midjourney all use this.</p>
+  </div>
+  <div class="formula">Forward (adds noise, step by step):
+  xₜ = √αₜ · xₜ₋₁ + √(1-αₜ) · ε,  ε ~ N(0,I)
+  After T steps: xₜ ≈ pure Gaussian noise N(0,I)
+
+Reverse (learned denoiser):
+  Network ε_θ(xₜ, t) predicts the noise added at step t
+  Loss: E[‖ε − ε_θ(xₜ, t)‖²]   ← simple MSE on noise prediction!
+
+Sampling: Start from xₜ ~ N(0,I) → apply T reverse denoising steps → get x₀
+
+Pros: High-quality diverse samples, stable training
+Cons: T=1000 steps per image → slow sampling</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="3">
+      <p>What is "mode collapse" in GAN training?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> The discriminator collapses to always outputting 0.5</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Training loss goes to zero and then spikes back up</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> The generator produces images with all-black pixels</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> The generator produces very limited variety — different inputs z give nearly identical outputs</div>
+      </div>
+      <div class="quiz-feedback">Mode collapse: G finds a small set of outputs that reliably fool D, and keeps generating only those. E.g., training on digits 0-9 but G always outputs "3". G has found a "mode" of the distribution and "collapsed" to it. Mini-batch discrimination forces D to look at a whole batch at once — if they all look the same, D knows they're fake!</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">📋 Week 7 Complete Summary</div>
+    <ul>
+      <li><strong>Latent space:</strong> Compressed, meaningful lower-D representation. z ~ N(0,I) → Generator → new data</li>
+      <li><strong>Data manifold:</strong> Real images live on a tiny curved surface in pixel space. Generative models map Gaussian noise onto it</li>
+      <li><strong>Classical methods:</strong> PCA (max variance axes), Factor Analysis (x=Λf+ε), LDA (doc=topic mix), SVD (A≈UΣVᵀ)</li>
+      <li><strong>Generative taxonomy:</strong> Explicit (tractable: Autoregressive, Flows) vs Approximate (VAE, Diffusion) vs Implicit (GAN)</li>
+      <li><strong>AE:</strong> x→z→x̂, loss=MSE. No distribution constraint → bad for generation</li>
+      <li><strong>VAE:</strong> Encoder outputs μ(x),σ(x). Loss = recon + KL(q(z|x)‖N(0,I)). Structured latent space → random z gives valid output</li>
+      <li><strong>GAN:</strong> G (counterfeiter) vs D (detective). min_G max_D V(D,G). Nash eq: D(x)=0.5 everywhere</li>
+      <li><strong>GAN issues:</strong> Mode collapse, non-convergence, vanishing gradients. Fix: WGAN, mini-batch discrimination, progressive growing</li>
+      <li><strong>StyleGAN:</strong> z→w (mapping network) + AdaIN + per-layer noise = controllable face generation</li>
+      <li><strong>Diffusion:</strong> Forward=add noise 1000 steps. Reverse=learned denoiser. DALL·E 3, Stable Diffusion use this!</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ WEEK 8 ══ -->
+<div class="week-header" id="w8">
+  <div class="week-number w8">Week 8</div>
+  <div class="week-title">Sequences, Language Models & RNNs</div>
+  <div class="week-line"></div>
+</div>
+
+<!-- SECTION: RNN INTRO -->
+<div class="section pink" id="rnn-intro">
+  <div class="section-label lbl-pink">7.1 & 8.1 · Foundations</div>
+  <h2>Why RNNs? The Problem with Sequences</h2>
+  <p>So far, every model we've built assumed <strong>independent data points</strong> (IID). But real-world data is often a <em>sequence</em>, where each element depends on what came before it. Enter the Recurrent Neural Network.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🎬</span>
+    <div class="analogy-title">Analogy — Reading a Mystery Novel</div>
+    <p>You can't understand what "He killed <em>him</em>" means on page 200 without context from earlier in the book. Similarly, a word in a sentence, a frame in a video, or a price on a stock chart only makes sense in the context of what came before. RNNs are designed to maintain this context as they process a sequence, one element at a time.</p>
+  </div>
+
+  <h3>Sequence Data: 3 Key Characteristics</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num pink">A</div>
+      <div class="step-body"><strong>Order matters:</strong> "Rama killed Ravan" ≠ "Ravan killed Rama". Same words, totally different meaning. Stock going 100→80→120 (crashed then recovered) ≠ 120→80→100 (peaked then dropped).</div>
+    </div>
+    <div class="step">
+      <div class="step-num orange">B</div>
+      <div class="step-body"><strong>Variable length:</strong> "Nice movie" (2 tokens) vs "The movie was extremely boring and slow" (8 tokens). A Fitbit recording for 1 hour (3600 steps) vs 15 minutes (900 steps). Simple ANNs need fixed-size input — problem!</div>
+    </div>
+    <div class="step">
+      <div class="step-num blue">C</div>
+      <div class="step-body"><strong>Short & long-range dependencies:</strong> "I am very <em>happy</em>" (short: "very"→"happy"). "Gapati and Balaji taught a class on GenAI. <em>They</em> took 12 weeks." (long: "they" refers to something 10+ words back). Both need to be captured.</div>
+    </div>
+  </div>
+
+  <h3>Why ANNs / CNNs Can't Handle Sequences Well</h3>
+  <table class="compare-table">
+    <tr><th>Problem</th><th>ANN/CNN Issue</th><th>RNN Solution</th></tr>
+    <tr><td>Variable length input</td><td>Need fixed-size vector. Truncation loses info. Padding adds fake zeros.</td><td>Process one token at a time, any length T!</td></tr>
+    <tr><td>No time-based parameter sharing</td><td>Different weights for position 1 vs position 2 (implicit)</td><td>Same weights W used at every time step</td></tr>
+    <tr><td>No memory of context</td><td>Single feedforward pass, no recurrence</td><td>Hidden state hₜ = "memory" of everything seen so far</td></tr>
+  </table>
+
+  <h3>Types of Sequence Tasks</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-teal)">Sequence → Single Output</h4>
+      <ul>
+        <li>Sentiment analysis (review → ⭐ rating)</li>
+        <li>Time series prediction (past prices → next price)</li>
+        <li>Video classification (frames → "running")</li>
+        <li>Predictive maintenance (sensor → failure prob)</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-purple)">Sequence → Sequence</h4>
+      <ul>
+        <li>Machine translation (English → Hindi)</li>
+        <li>Named Entity Recognition (word → label per word)</li>
+        <li>Speech recognition (audio → text)</li>
+        <li>Music generation (notes → more notes)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="2">
+      <p>Why is zero-padding a poor solution for handling variable-length sequences in a standard ANN?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Zeros cause division by zero errors in backpropagation</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Padding makes the input too small</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Padded zeros are meaningless but still influence weights via multiplication and gradients, confusing training</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Padding only works for images, not text</div>
+      </div>
+      <div class="quiz-feedback">Padding zeros are fake data. These zeros still get multiplied by weight matrices, contribute to activations, and influence gradients during backpropagation. The model has to somehow "learn" that zeros at certain positions are meaningless — which is very hard! RNNs avoid this entirely by processing sequences step by step, stopping naturally when the sequence ends.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: LANGUAGE MODELS -->
+<div class="section teal" id="langmodel">
+  <div class="section-label lbl-teal">8.2 · Language Models</div>
+  <h2>Language Models: Teaching AI to Understand Text</h2>
+  <p>A <strong>language model</strong> is a sequence model applied to text. Its core question: <em>How likely is this sequence of words?</em> This probability estimation is literally the engine inside ChatGPT.</p>
+
+  <h3>Step 1: Tokenization — Breaking Text into Pieces</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-blue)">Character-Level</h4>
+      <p>"split" → [s, p, l, i, t] = 5 tokens</p>
+      <p>Vocabulary ≈ 50 chars<br>Sequences are very long<br>Works for any language/code</p>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-teal)">Word-Level ⭐</h4>
+      <p>"split this text" → ["split", "this", "text"] = 3 tokens</p>
+      <p>Vocabulary ≈ 300,000 words<br>Shorter, more meaningful sequences<br>Can't handle unknown words well</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-title">🔢 Building a Vocabulary from Scratch</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Corpus: "I like cats" + "I hate cats" + "cats like milk"</p>
+    <table>
+      <tr><th>All tokens (with repeats)</th><th>Unique tokens (vocabulary)</th><th>Word → ID</th></tr>
+      <tr><td>I, like, cats, I, hate, cats, cats, like, milk</td><td>I, like, cats, hate, milk</td><td>UNK→0, I→1, like→2, cats→3, hate→4, milk→5</td></tr>
+    </table>
+    <p style="font-size:0.88rem; margin-top:0.75rem; margin-bottom:0.5rem;">Encoding sentences:</p>
+    <table>
+      <tr><th>Sentence</th><th>Encoded sequence</th></tr>
+      <tr><td>"I like cats"</td><td>[1, 2, 3]</td></tr>
+      <tr><td>"cats like milk"</td><td>[3, 2, 5]</td></tr>
+      <tr><td>"I like pizza" (pizza not in vocab!)</td><td>[1, 2, 0]  ← UNK for pizza</td></tr>
+    </table>
+    <div class="result">Corpus length = 9 tokens. Vocabulary size = 5 unique tokens. Always remember: corpus is the total text, vocabulary is unique words.</div>
+  </div>
+
+  <h3>Step 2: Joint Probability via Chain Rule</h3>
+  <div class="formula">Language Model: estimate P(w₁, w₂, ..., wₜ) for any sequence.
+
+Chain Rule (always exact):
+  P(w₁, w₂, ..., wₜ) = P(w₁) · P(w₂|w₁) · P(w₃|w₁,w₂) · ... · P(wₜ|w₁,...,wₜ₋₁)
+
+Real-world analogy (weather chain rule):
+  P(rain, umbrella, wet) = P(rain) × P(umbrella|rain) × P(wet|rain,umbrella)
+  = 0.3 × 0.8 × 0.2 = 0.048
+
+Language example: "the cat sat"
+  P("the") = 0.2
+  P("cat"|"the") = 0.5
+  P("sat"|"the cat") = 0.8
+  P("the cat sat") = 0.2 × 0.5 × 0.8 = 0.08
+
+Compare: "the cat sang"
+  P("sang"|"the cat") = 0.01
+  P("the cat sang") = 0.2 × 0.5 × 0.01 = 0.001
+
+Higher probability → more natural sentence!  (0.08 >> 0.001)</div>
+
+  <h3>Step 3: Bigram Model — A Practical Approximation</h3>
+  <p>The full chain rule requires conditioning on all previous words — too expensive! N-gram models approximate by only looking at the last n-1 words:</p>
+  <div class="formula">Bigram assumption (n=2): 
+  P(wₜ | w₁,...,wₜ₋₁) ≈ P(wₜ | wₜ₋₁)
+
+Estimate from counts:
+  P(wₜ | wₜ₋₁) = count("wₜ₋₁ wₜ") / count("wₜ₋₁ *")
+
+Example corpus: "the cat sat" + "the cat slept" + "the dog sat"
+
+Bigrams and counts:
+  ("the","cat") → 2,  ("the","dog") → 1,  ("cat","sat") → 1, ...
+
+P("cat"|"the") = 2/3 ≈ 0.67
+P("dog"|"the") = 1/3 ≈ 0.33
+P("sat"|"cat") = 1/2 = 0.50
+P("slept"|"cat") = 1/2 = 0.50
+
+Probability of "the cat sat":
+  P = P("the") × P("cat"|"the") × P("sat"|"cat")
+  = 1 × 0.67 × 0.50 = 0.33</div>
+
+  <h3>Step 4: Creating Training Data (X, Y Pairs)</h3>
+  <p>Language model training is <strong>self-supervised</strong> — no human labels needed. We create (X, Y) pairs from the raw text using <em>next token prediction</em>:</p>
+  <div class="example">
+    <div class="example-title">🔢 Creating X, Y Subsequences with Window Size τ=3</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Corpus: "sat on the mat and slept all day" → tokens: [3, 4, 1, 5, 6, 7, 8, 9]</p>
+    <table>
+      <tr><th>Pair #</th><th>X (input tokens)</th><th>Y (target = X shifted by 1)</th><th>Meaning</th></tr>
+      <tr><td>1</td><td>[3, 4, 1] = "sat on the"</td><td>[4, 1, 5] = "on the mat"</td><td>Given "sat on the", predict "on the mat"</td></tr>
+      <tr><td>2</td><td>[1, 5, 6] = "the mat and"</td><td>[5, 6, 7] = "mat and slept"</td><td>Given "the mat and", predict "mat and slept"</td></tr>
+      <tr><td>3</td><td>[6, 7, 8] = "and slept all"</td><td>[7, 8, 9] = "slept all day"</td><td>Given "and slept all", predict "slept all day"</td></tr>
+    </table>
+    <div class="result">Pattern: Y = X shifted one step to the right! Each (X,Y) pair = one data point. Data size = number of such subsequence pairs, NOT the number of original documents.</div>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="0">
+      <p>Given corpus "a b a c a b a", what is P(b|a) using bigram counts?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> 2/3 (bigrams starting with "a": (a,b)×2 and (a,c)×1 → total 3)</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> 1/2</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> 2/7</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> 1/3</div>
+      </div>
+      <div class="quiz-feedback">Bigrams in "a b a c a b a": (a,b)=2, (b,a)=2, (a,c)=1. Total bigrams starting with "a": 2+1=3. So P(b|a) = count(a,b) / count(a,*) = 2/3 ≈ 0.67</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: PERPLEXITY -->
+<div class="section yellow" id="perplexity">
+  <div class="section-label lbl-yellow">8.3 · Evaluation</div>
+  <h2>Perplexity — How "Confused" Is the Language Model?</h2>
+  <p>Perplexity (PPL) tells us how well a language model predicts text. It's the standard metric — lower is always better.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🎲</span>
+    <div class="analogy-title">Analogy — Loaded Dice</div>
+    <p>Perplexity ≈ effective number of equally likely choices the model faces at each step. If PPL = 100, the model behaves as if it has 100 equally likely options for the next word. A perfect model (knows exactly what comes next) has PPL = 1. A model that randomly guesses from a vocabulary of V words has PPL = V.</p>
+  </div>
+
+  <div class="formula">Perplexity Formula:
+
+  PPL = exp(−(1/T) · Σₜ log P(xₜ | x<t))
+
+Equivalently:
+  PPL = P(x₁, x₂, ..., xₜ)^(−1/T)
+
+Think of it as: the geometric mean of 1/P per token
+
+  PPL = 1         → Perfect model (always picks the right word with prob=1)
+  PPL = V         → Random guessing over vocabulary size V
+  PPL = k         → Model behaves like it has k equally likely choices</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Perplexity Worked Examples</div>
+    <table>
+      <tr><th>Scenario</th><th>Probabilities</th><th>Joint P</th><th>PPL = P^(−1/T)</th></tr>
+      <tr><td>T=3, all p=1/4</td><td>0.25, 0.25, 0.25</td><td>1/64</td><td>(1/64)^(−1/3) = 64^(1/3) = 4 ✓</td></tr>
+      <tr><td>T=3, all p=1/10</td><td>0.1, 0.1, 0.1</td><td>0.001</td><td>0.001^(−1/3) = 10 ✓</td></tr>
+      <tr><td>"the cat sat" (natural)</td><td>0.2, 0.5, 0.8</td><td>0.08</td><td>0.08^(−1/3) ≈ 2.32</td></tr>
+      <tr><td>"the banana slept" (weird)</td><td>0.2, 0.05, 0.1</td><td>0.001</td><td>0.001^(−1/3) = 10</td></tr>
+    </table>
+    <div class="result">PPL("the cat sat") ≈ 2.32 vs PPL("the banana slept") ≈ 10. The model is much less confused by the natural sentence! This is exactly what we want.</div>
+  </div>
+
+  <div class="example">
+    <div class="example-title">🔢 Model Comparison — Which is Better?</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Sentence length T=2. Model A: P=[0.5, 0.2], Model B: P=[0.25, 0.25]</p>
+    <div class="formula" style="margin:0; font-size:0.83rem">Model A: P = 0.5 × 0.2 = 0.1
+  PPL_A = 0.1^(−1/2) = 1/√0.1 = √10 ≈ 3.16
+
+Model B: P = 0.25 × 0.25 = 0.0625
+  PPL_B = 0.0625^(−1/2) = 1/√0.0625 = 1/0.25 = 4.0
+
+PPL_A < PPL_B → Model A is better! ✅</div>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="3">
+      <p>A language model trained on Wikipedia has perplexity 50 on a test set. What does this approximately mean?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> The model makes 50 errors per sentence</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> The model's accuracy is 50%</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> The model was trained on 50 documents</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> At each position, the model behaves as if choosing between ~50 equally likely next words</div>
+      </div>
+      <div class="quiz-feedback">PPL ≈ effective number of choices per position. PPL=50 means the model is as uncertain as if it were randomly choosing from 50 words at each step. If vocabulary size V=50,000, then PPL=50 is very good (much less confused than random). A perfect model would have PPL=1.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: RNN ARCHITECTURE -->
+<div class="section orange" id="rnn-arch">
+  <div class="section-label lbl-orange">8.4 · Architecture</div>
+  <h2>RNN Architecture: The Hidden State as Memory</h2>
+  <p>An RNN processes a sequence one element at a time, maintaining a <strong>hidden state</strong> hₜ that acts as the "memory" of everything it has seen so far.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🌊</span>
+    <div class="analogy-title">Analogy — Straw in a River</div>
+    <p>Imagine a river of information (x₁, x₂, x₃, ...) flowing past. At each point, the RNN updates its hidden state hₜ. You can put a "straw" anywhere in the river to extract an output — at the end (sentiment), at every step (next word prediction), or at any specific step. The hidden state is like a continuously updated summary of the river so far.</p>
+  </div>
+
+  <h3>The Core Equations</h3>
+  <div class="formula">At each time step t, RNN does:
+
+(1) Compute hidden state:
+    <span class="hi">zₜ = W_xh · xₜ + W_hh · hₜ₋₁ + b_h</span>
+    <span class="hi">hₜ = tanh(zₜ)</span>   ← or ReLU
+
+(2) Compute output (optional, depends on task):
+    oₜ = W_hy · hₜ + b_y
+    yₜ = softmax(oₜ)   ← next word prediction
+    yₜ = sigmoid(oₜ)   ← binary classification  
+    yₜ = oₜ            ← regression
+
+Three weight matrices (learned, SAME at every time step!):
+  <span class="sym">W_xh</span>: (hidden_size × input_size)   ← "current input encoding"
+  <span class="sym">W_hh</span>: (hidden_size × hidden_size) ← "memory update"
+  <span class="sym">W_hy</span>: (output_size × hidden_size) ← "judgment/decision"
+
+Initialize: h₀ = zeros (or learnable start token)</div>
+
+  <!-- Unrolled RNN Diagram -->
+  <div class="flowchart-wrap">
+    <svg width="760" height="185" viewBox="0 0 760 185" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrTeal" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#2dd4bf"/></marker>
+        <marker id="arrOrange" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#fb923c"/></marker>
+        <marker id="arrBlue" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L0,5 L7,2.5 z" fill="#4d9fff"/></marker>
+      </defs>
+      <rect width="760" height="185" fill="#0d1118" rx="12"/>
+
+      <!-- time labels -->
+      <text x="100" y="20" text-anchor="middle" fill="#5e7291" font-size="10" font-family="Syne,sans-serif" font-weight="700">t=0</text>
+      <text x="270" y="20" text-anchor="middle" fill="#5e7291" font-size="10" font-family="Syne,sans-serif" font-weight="700">t=1</text>
+      <text x="440" y="20" text-anchor="middle" fill="#5e7291" font-size="10" font-family="Syne,sans-serif" font-weight="700">t=2</text>
+      <text x="610" y="20" text-anchor="middle" fill="#5e7291" font-size="10" font-family="Syne,sans-serif" font-weight="700">t=3</text>
+
+      <!-- h0 box -->
+      <rect x="55" y="75" width="90" height="45" rx="8" fill="#141b24" stroke="#5e7291" stroke-width="1.5"/>
+      <text x="100" y="97" text-anchor="middle" fill="#5e7291" font-family="Syne,sans-serif" font-size="11" font-weight="700">h₀ = 0</text>
+      <text x="100" y="112" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">initial state</text>
+
+      <!-- h1 box -->
+      <rect x="225" y="75" width="90" height="45" rx="8" fill="#141b24" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="270" y="97" text-anchor="middle" fill="#2dd4bf" font-family="Syne,sans-serif" font-size="12" font-weight="700">RNN Cell</text>
+      <text x="270" y="112" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">h₁ = f(W_xh·x₁+W_hh·h₀)</text>
+
+      <!-- h2 box -->
+      <rect x="395" y="75" width="90" height="45" rx="8" fill="#141b24" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="440" y="97" text-anchor="middle" fill="#2dd4bf" font-family="Syne,sans-serif" font-size="12" font-weight="700">RNN Cell</text>
+      <text x="440" y="112" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">h₂ = f(W_xh·x₂+W_hh·h₁)</text>
+
+      <!-- h3 box -->
+      <rect x="565" y="75" width="90" height="45" rx="8" fill="#141b24" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="610" y="97" text-anchor="middle" fill="#2dd4bf" font-family="Syne,sans-serif" font-size="12" font-weight="700">RNN Cell</text>
+      <text x="610" y="112" text-anchor="middle" fill="#5e7291" font-family="Inter,sans-serif" font-size="9">h₃ = f(W_xh·x₃+W_hh·h₂)</text>
+
+      <!-- Hidden state arrows (horizontal) -->
+      <line x1="145" y1="97" x2="223" y2="97" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrTeal)"/>
+      <line x1="315" y1="97" x2="393" y2="97" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrTeal)"/>
+      <line x1="485" y1="97" x2="563" y2="97" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrTeal)"/>
+      <line x1="655" y1="97" x2="740" y2="97" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrTeal)"/>
+      <text x="695" y="90" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">...</text>
+
+      <!-- Same weights label -->
+      <text x="270" y="63" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-family="Syne,sans-serif" font-weight="700">Same W_xh, W_hh, W_hy!</text>
+      <text x="440" y="63" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-family="Syne,sans-serif" font-weight="700">Same W_xh, W_hh, W_hy!</text>
+      <text x="610" y="63" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-family="Syne,sans-serif" font-weight="700">Same W_xh, W_hh, W_hy!</text>
+
+      <!-- Input arrows (from below) -->
+      <text x="270" y="170" text-anchor="middle" fill="#fb923c" font-size="10" font-family="Inter,sans-serif">x₁ ("the")</text>
+      <line x1="270" y1="163" x2="270" y2="122" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arrOrange)"/>
+      <text x="440" y="170" text-anchor="middle" fill="#fb923c" font-size="10" font-family="Inter,sans-serif">x₂ ("cat")</text>
+      <line x1="440" y1="163" x2="440" y2="122" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arrOrange)"/>
+      <text x="610" y="170" text-anchor="middle" fill="#fb923c" font-size="10" font-family="Inter,sans-serif">x₃ ("sat")</text>
+      <line x1="610" y1="163" x2="610" y2="122" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arrOrange)"/>
+
+      <!-- Output arrow (optional, from t=3) -->
+      <line x1="610" y1="75" x2="610" y2="38" stroke="#4d9fff" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrBlue)"/>
+      <text x="685" y="48" fill="#4d9fff" font-size="9" font-family="Inter,sans-serif">y₃ (optional)</text>
+      <text x="685" y="60" fill="#5e7291" font-size="9" font-family="Inter,sans-serif">"output straw"</text>
+    </svg>
+  </div>
+
+  <h3>The Three Weight Matrices — Dimensions</h3>
+  <div class="example">
+    <div class="example-title">🔢 Concrete Dimension Example</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Input: 5-D weather vector (temp, pressure, humidity, wind, cloud). Hidden size: 100. Task: binary prediction (rain tomorrow?)</p>
+    <table>
+      <tr><th>Matrix</th><th>Shape</th><th>Parameters</th><th>Role</th></tr>
+      <tr><td>W_xh</td><td>100 × 5</td><td>500</td><td>"Encode today's weather"</td></tr>
+      <tr><td>W_hh</td><td>100 × 100</td><td>10,000</td><td>"Update memory with history"</td></tr>
+      <tr><td>b_h</td><td>100</td><td>100</td><td>Hidden bias</td></tr>
+      <tr><td>W_hy</td><td>1 × 100</td><td>100</td><td>"Make rain/no-rain decision"</td></tr>
+      <tr><td>b_y</td><td>1</td><td>1</td><td>Output bias</td></tr>
+    </table>
+    <div class="result">Total trainable parameters = 10,701. And ALL of these are reused at EVERY time step — that's parameter sharing! For next-word prediction over vocab V=10,000: W_hy would be 10,000 × 100 = 1,000,000 params.</div>
+  </div>
+
+  <h3>Full Numerical Walkthrough</h3>
+  <div class="formula">Tiny RNN: input_dim=2, hidden_dim=3, h₀=[0,0,0]
+
+W_xh = [[1,0],[0,1],[1,-1]]    W_hh = [[0.5,0,0],[0,0.5,0],[0,0,0.5]]    b_h = [0,0,0]
+
+Sequence: x₁=[1,2], x₂=[0,1]
+
+── Step 1 (t=1) ──
+z₁ = W_xh·x₁ + W_hh·h₀ + b_h
+  W_xh·x₁ = [1×1+0×2, 0×1+1×2, 1×1+(-1)×2] = [1, 2, -1]
+  W_hh·h₀ = [0, 0, 0]    (h₀=zeros)
+  z₁ = [1, 2, -1] + [0,0,0] = [1, 2, -1]
+h₁ = tanh([1, 2, -1]) ≈ [0.76, 0.96, -0.76]
+
+── Step 2 (t=2) ──
+W_xh·x₂ = [1×0+0×1, 0×0+1×1, 1×0+(-1)×1] = [0, 1, -1]
+W_hh·h₁ ≈ [0.5×0.76, 0.5×0.96, 0.5×(-0.76)] = [0.38, 0.48, -0.38]
+z₂ = [0,1,-1] + [0.38,0.48,-0.38] = [0.38, 1.48, -1.38]
+h₂ = tanh([0.38, 1.48, -1.38]) ≈ [0.36, 0.90, -0.88]
+
+h₂ now contains compressed info from BOTH x₁ AND x₂! 🎉</div>
+
+  <div class="callout tip">
+    <strong>💡 Why "Recurrent"?</strong> Because hₜ feeds back into the computation of hₜ₊₁. The hidden state refers to (recurs on) itself. It's a self-referential, auto-regressive process: each hidden state is a function of the previous hidden state. This is what gives RNNs their "memory."
+  </div>
+
+  <h3>RNN vs n-gram: The Hidden State Trick</h3>
+  <div class="formula">n-gram model: P(xₜ | xₜ₋₁, ..., xₜ₋ₙ₊₁)
+  ✗ Only last n-1 tokens visible (short memory)
+  ✗ Table grows exponentially: V^n entries needed
+  ✗ Trigram with V=50k: 125 billion entries!
+
+RNN model: P(xₜ | hₜ₋₁)
+  ✓ h_{t-1} = compressed "zip file" of ENTIRE past history
+  ✓ Fixed-size vector regardless of sequence length
+  ✓ No huge table — learned parameters instead
+  ✓ Can (in theory) capture arbitrarily long dependencies
+
+"The hidden state h_{t-1} is a single vector representing 
+the entire sequence x₁, ..., xₜ₋₁." — Lecture</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="1">
+      <p>In an RNN with input_dim=10, hidden_dim=50, output_dim=20, how many parameters does W_hh have?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> 500 (50 × 10)</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> 2500 (50 × 50)</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> 1000 (20 × 50)</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> 200 (20 × 10)</div>
+      </div>
+      <div class="quiz-feedback">W_hh maps hidden_dim → hidden_dim, so its shape is 50 × 50 = 2500 parameters. (W_xh = 50×10 = 500; W_hy = 20×50 = 1000). The hidden-to-hidden matrix is almost always the largest — it captures how the memory evolves over time.</div>
+    </div>
+
+    <div class="quiz-q" data-answer="2">
+      <p>Calculate perplexity for T=4 with probabilities P=[0.5, 0.25, 0.5, 0.25].</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> PPL = 1</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> PPL = 4</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> PPL ≈ 2.83</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> PPL = 10</div>
+      </div>
+      <div class="quiz-feedback">Joint P = 0.5×0.25×0.5×0.25 = 0.015625 = 1/64. PPL = (1/64)^(-1/4) = 64^(1/4) = (2^6)^(1/4) = 2^(6/4) = 2^1.5 = 2√2 ≈ 2.83.</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">📋 Week 8 Complete Summary</div>
+    <ul>
+      <li><strong>Sequence data:</strong> Order matters. IID assumption breaks. Variable length. Short & long range dependencies.</li>
+      <li><strong>Why RNN:</strong> ANN can't handle variable length, no temporal parameter sharing, no memory. RNN solves all three.</li>
+      <li><strong>Tokenization:</strong> Text → tokens → integer IDs. Char-level (small vocab, long seqs) vs Word-level (large vocab, short seqs).</li>
+      <li><strong>Vocabulary:</strong> Unique tokens. UNK=0 for unknown words. Corpus size ≠ vocabulary size.</li>
+      <li><strong>Language model:</strong> P(w₁,...,wₜ) via chain rule = P(w₁)·P(w₂|w₁)·... Higher P = more natural sentence.</li>
+      <li><strong>Bigram:</strong> P(wₜ|wₜ₋₁) ≈ count(wₜ₋₁,wₜ)/count(wₜ₋₁,*). Simple but limited context.</li>
+      <li><strong>Training data:</strong> X=[x₁,...,xτ], Y=[x₂,...,xτ₊₁] (shifted by 1). Self-supervised = no human labels!</li>
+      <li><strong>Perplexity:</strong> PPL = P(seq)^(−1/T). Lower = better. PPL=1 perfect. PPL=V random. PPL≈k means k-way confusion.</li>
+      <li><strong>RNN equations:</strong> zₜ = W_xh·xₜ + W_hh·hₜ₋₁ + bₕ; hₜ = tanh(zₜ); yₜ = g(W_hy·hₜ + bᵧ)</li>
+      <li><strong>Parameter sharing:</strong> Same W_xh, W_hh, W_hy at EVERY time step → works for any sequence length!</li>
+      <li><strong>RNN trick:</strong> P(xₜ|x₁,...,xₜ₋₁) ≈ P(xₜ|hₜ₋₁). Hidden state = compressed "zip file" of full history.</li>
+    </ul>
+  </div>
+
+  <!-- Final Mixed Quiz -->
+  <div class="quiz" style="margin-top:2rem">
+    <div class="quiz-title">🎯 Final Mixed Quiz — Weeks 7 & 8</div>
+
+    <div class="quiz-q" data-answer="2">
+      <p>1. What is the key difference between a VAE encoder and a standard AE encoder?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> VAE encoder is much larger than AE encoder</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> AE encoder uses sigmoid activation; VAE uses ReLU</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> VAE encoder outputs distribution parameters μ and σ, not a single point z</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> VAE encoder works without backpropagation</div>
+      </div>
+      <div class="quiz-feedback">AE encoder: x → z (deterministic single point). VAE encoder: x → μ(x), σ(x) (parameters of a Gaussian distribution). Then z is sampled: z = μ + σ⊙ε, ε~N(0,I). This probabilistic encoding, combined with KL regularization, gives VAE its structured latent space.</div>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p>2. In GAN training with the original G loss, why does the generator struggle when D is very good early in training?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> D(G(z))≈0 → log(1−D(G(z)))≈log(1)=0 → gradient≈0 → G can't learn (vanishing gradient)</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> The generator's learning rate is too high</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Mode collapse makes all outputs identical from the start</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> The discriminator is always frozen when training the generator</div>
+      </div>
+      <div class="quiz-feedback">When D is confident fakes are fake, D(G(z))≈0. The original G loss is log(1-D(G(z))) = log(1-0) = log(1) = 0. The gradient of log(1-y) at y≈0 is ≈0 — so G receives almost no learning signal! The fix: use maximize log D(G(z)) instead. At y=0.01: log(0.01) = -4.6, gradient is large and G learns fast.</div>
+    </div>
+
+    <div class="quiz-q" data-answer="3">
+      <p>3. What is the "reparameterization trick" in VAE and why is it needed?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> It converts the encoder from CNN to MLP</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> It changes the loss function from MSE to KL divergence</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> It allows the model to use smaller batch sizes</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> z=μ+σ·ε (ε~N(0,I)) — moves the randomness to a fixed input, allowing gradients to flow through the sampling operation</div>
+      </div>
+      <div class="quiz-feedback">You can't backpropagate through a random sampling operation (sampling z~N(μ,σ²) is not differentiable). The trick: write z=μ+σ·ε where ε~N(0,I) is sampled independently. Now z is a deterministic function of μ and σ (which the network computes), and ε is just a fixed external noise input. Gradients flow through μ and σ as usual!</div>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p>4. Why do RNNs use the SAME weight matrices W_xh, W_hh, W_hy at every time step?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Using different weights per step would make the network too accurate</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> The relationship between adjacent elements is assumed to be the same regardless of position — enabling generalization to any sequence length</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> GPUs can only process one weight matrix at a time</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Shared weights prevent overfitting only in long sequences</div>
+      </div>
+      <div class="quiz-feedback">Parameter sharing assumes stationarity — the same "next word given previous word" mechanism applies at every position. This enables: (1) training on sequences of any length with the same parameters, (2) fewer parameters = less overfitting, (3) the model can generalize to sequences longer than those seen during training. Same idea as CNN sharing the same kernel across all spatial positions.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<div style="text-align:center; padding:3rem 2rem; color:var(--muted); font-size:0.82rem; border-top:1px solid var(--border); margin-top:2rem;">
+  <p style="margin-bottom:0.4rem;">Deep Learning & Generative AI · IIT Madras · Weeks 7 & 8 Study Guide</p>
+  <p>Covers: Latent Spaces, PCA/Factor Analysis/LDA/SVD, Data Manifold, Generative Model Taxonomy, AE→VAE→GAN→Diffusion, StyleGAN, DCGAN, Sequence Data, Tokenization, Language Models, Chain Rule Probability, Bigrams, Training Data Formation, Perplexity, RNN Architecture & Math.</p>
+</div>
+
+<script>
+function answerQ(el, selected) {
+  const qBlock = el.closest('.quiz-q');
+  if (qBlock.dataset.answered) return;
+  qBlock.dataset.answered = 'true';
+  const correct = parseInt(qBlock.dataset.answer);
+  const opts = qBlock.querySelectorAll('.quiz-opt');
+  const feedback = qBlock.querySelector('.quiz-feedback');
+  opts.forEach((opt, i) => { opt.style.pointerEvents = 'none'; if (i === correct) opt.classList.add('reveal-correct'); });
+  if (selected === correct) { el.classList.add('correct'); feedback.classList.add('show','correct'); feedback.innerHTML = '✅ ' + feedback.innerHTML; }
+  else { el.classList.add('wrong'); feedback.classList.add('show','wrong'); feedback.innerHTML = '❌ ' + feedback.innerHTML; }
+}
+</script>
+</body>
+</html>

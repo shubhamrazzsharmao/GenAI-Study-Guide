@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Learning — Weeks 5 & 6 Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080f;
+    --surface: #0e1018;
+    --surface2: #161824;
+    --surface3: #1e2130;
+    --border: #252a3a;
+    --text: #d8ddf0;
+    --muted: #6e7591;
+    --accent-blue: #5b9fff;
+    --accent-orange: #ff8c42;
+    --accent-green: #4ec98f;
+    --accent-purple: #b57ff5;
+    --accent-red: #ff6b6b;
+    --accent-yellow: #ffd166;
+    --accent-cyan: #06d6f5;
+    --glow-blue: rgba(91,159,255,0.12);
+    --glow-orange: rgba(255,140,66,0.12);
+    --glow-green: rgba(78,201,143,0.12);
+    --glow-purple: rgba(181,127,245,0.12);
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(7,8,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 56px;
+    overflow-x: auto;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--accent-blue);
+    white-space: nowrap;
+    margin-right: 2rem;
+    letter-spacing: -0.02em;
+  }
+  .nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .nav-link:hover { color: var(--text); background: var(--surface3); }
+  .nav-w5 { border-left: 2px solid var(--accent-blue); }
+  .nav-w6 { border-left: 2px solid var(--accent-purple); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 8rem 2rem 5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge span { color: var(--accent-blue); }
+  .hero h1 {
+    font-family: var(--font-head);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+  .hero p {
+    color: var(--muted);
+    max-width: 600px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .week-pills {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .pill-blue { background: var(--glow-blue); border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+  .pill-purple { background: var(--glow-purple); border: 1px solid var(--accent-purple); color: var(--accent-purple); }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ── WEEK DIVIDERS ── */
+  .week-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 5rem 0 3rem;
+    position: relative;
+  }
+  .week-number {
+    font-family: var(--font-head);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+  }
+  .week-number.w5 { background: var(--glow-blue); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+  .week-number.w6 { background: var(--glow-purple); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+  .week-title {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .week-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── SECTION CARDS ── */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .section.blue::before { background: linear-gradient(90deg, var(--accent-blue), transparent); }
+  .section.orange::before { background: linear-gradient(90deg, var(--accent-orange), transparent); }
+  .section.green::before { background: linear-gradient(90deg, var(--accent-green), transparent); }
+  .section.purple::before { background: linear-gradient(90deg, var(--accent-purple), transparent); }
+  .section.red::before { background: linear-gradient(90deg, var(--accent-red), transparent); }
+  .section.cyan::before { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+  .section.yellow::before { background: linear-gradient(90deg, var(--accent-yellow), transparent); }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .lbl-blue { color: var(--accent-blue); }
+  .lbl-orange { color: var(--accent-orange); }
+  .lbl-green { color: var(--accent-green); }
+  .lbl-purple { color: var(--accent-purple); }
+  .lbl-red { color: var(--accent-red); }
+  .lbl-cyan { color: var(--accent-cyan); }
+  .lbl-yellow { color: var(--accent-yellow); }
+
+  .section h2 {
+    font-family: var(--font-head);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+    line-height: 1.25;
+  }
+  .section h3 {
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .section p { color: var(--text); margin-bottom: 0.9rem; }
+
+  /* ── ANALOGY BOX ── */
+  .analogy {
+    background: linear-gradient(135deg, rgba(255,140,66,0.08), rgba(255,140,66,0.03));
+    border: 1px solid rgba(255,140,66,0.3);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.25rem 0;
+    position: relative;
+  }
+  .analogy-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .analogy-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-orange);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .analogy p { color: var(--text); margin: 0; font-size: 0.93rem; }
+
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 0 10px 10px 0;
+    padding: 1.1rem 1.4rem;
+    margin: 1rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    color: #c5d8ff;
+  }
+  .formula .hi { color: var(--accent-yellow); }
+  .formula .op { color: var(--accent-orange); }
+  .formula .sym { color: var(--accent-cyan); }
+
+  /* ── WORKED EXAMPLE ── */
+  .example {
+    background: linear-gradient(135deg, rgba(78,201,143,0.07), rgba(78,201,143,0.02));
+    border: 1px solid rgba(78,201,143,0.25);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .example-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .example table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    margin: 0.75rem 0;
+  }
+  .example th {
+    background: rgba(78,201,143,0.12);
+    color: var(--accent-green);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .example td {
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid rgba(78,201,143,0.08);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text);
+  }
+  .example tr:last-child td { border-bottom: none; }
+  .example .result {
+    margin-top: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: rgba(78,201,143,0.1);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--accent-green);
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: rgba(91,159,255,0.07);
+    border: 1px solid rgba(91,159,255,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .callout.warn {
+    background: rgba(255,107,107,0.07);
+    border-color: rgba(255,107,107,0.25);
+  }
+  .callout.tip {
+    background: rgba(255,209,102,0.07);
+    border-color: rgba(255,209,102,0.25);
+  }
+  .callout strong { color: var(--accent-blue); }
+  .callout.warn strong { color: var(--accent-red); }
+  .callout.tip strong { color: var(--accent-yellow); }
+
+  /* ── SVG FLOWCHART ── */
+  .flowchart-wrap {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .flowchart-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+  .compare-table th {
+    background: var(--surface3);
+    color: var(--muted);
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .compare-table tr:hover td { background: var(--surface2); }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .badge-small {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .badge-green { background: var(--glow-green); color: var(--accent-green); }
+  .badge-red { background: rgba(255,107,107,0.12); color: var(--accent-red); }
+  .badge-yellow { background: rgba(255,209,102,0.12); color: var(--accent-yellow); }
+
+  /* ── MCQ QUIZ ── */
+  .quiz { margin: 2rem 0 0.5rem; }
+  .quiz-title {
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-purple);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .quiz-q {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .quiz-q p {
+    font-size: 0.92rem;
+    font-weight: 500;
+    margin-bottom: 0.9rem;
+    color: var(--text);
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.4rem; }
+  .quiz-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    color: var(--text);
+    background: var(--surface3);
+    user-select: none;
+  }
+  .quiz-opt:hover { border-color: var(--accent-purple); background: var(--glow-purple); }
+  .quiz-opt.correct { border-color: var(--accent-green); background: var(--glow-green); color: var(--accent-green); }
+  .quiz-opt.wrong { border-color: var(--accent-red); background: rgba(255,107,107,0.08); color: var(--accent-red); }
+  .quiz-opt.reveal-correct { border-color: var(--accent-green); background: var(--glow-green); }
+  .quiz-opt-key {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+    color: var(--muted);
+  }
+  .quiz-feedback {
+    margin-top: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.83rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--glow-green); color: var(--accent-green); }
+  .quiz-feedback.wrong { background: rgba(255,107,107,0.08); color: var(--accent-red); }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .col-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+  }
+  .col-card h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-head);
+  }
+  .col-card p { font-size: 0.87rem; margin: 0; color: var(--muted); }
+  .col-card ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.87rem; }
+  .col-card li { margin-bottom: 0.25rem; }
+
+  /* ── STEP LIST ── */
+  .steps { margin: 1rem 0; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .step-num.blue { background: var(--glow-blue); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+  .step-num.orange { background: var(--glow-orange); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
+  .step-num.green { background: var(--glow-green); color: var(--accent-green); border: 1px solid var(--accent-green); }
+  .step-num.purple { background: var(--glow-purple); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+  .step-body { flex: 1; padding-top: 0.2rem; font-size: 0.9rem; }
+  .step-body strong { color: var(--text); }
+
+  /* ── SUMMARY BOX ── */
+  .summary {
+    background: linear-gradient(135deg, rgba(181,127,245,0.08), rgba(91,159,255,0.05));
+    border: 1px solid rgba(181,127,245,0.25);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .summary-title {
+    font-family: var(--font-head);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-purple);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .summary ul { padding-left: 1.25rem; }
+  .summary li { margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--text); }
+
+  /* ── CODE ── */
+  .code-block {
+    background: #0a0b11;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.83rem;
+    overflow-x: auto;
+    line-height: 1.85;
+    color: #bfc9e0;
+    margin: 1rem 0;
+  }
+  .code-block .kw { color: #cc99cd; }
+  .code-block .fn { color: var(--accent-blue); }
+  .code-block .st { color: var(--accent-green); }
+  .code-block .cm { color: #4a5568; font-style: italic; }
+  .code-block .num { color: var(--accent-orange); }
+
+  /* ── HIGHLIGHT TAG ── */
+  mark {
+    background: rgba(91,159,255,0.15);
+    color: var(--accent-blue);
+    border-radius: 3px;
+    padding: 0.05em 0.3em;
+    font-size: inherit;
+  }
+  mark.green { background: rgba(78,201,143,0.15); color: var(--accent-green); }
+  mark.orange { background: rgba(255,140,66,0.15); color: var(--accent-orange); }
+  mark.purple { background: rgba(181,127,245,0.15); color: var(--accent-purple); }
+  mark.red { background: rgba(255,107,107,0.15); color: var(--accent-red); }
+
+  /* ── MINI DIAGRAM ── */
+  .diagram-label {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* ── PROGRESS BAR ANIMATION ── */
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+  .section { animation: fadeIn 0.5s ease both; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  /* ── OPTIMIZER TIMELINE ── */
+  .optimizer-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .opt-node {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+  .opt-node .opt-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+  }
+  .opt-node .opt-desc {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+    line-height: 1.3;
+  }
+  .opt-arrow {
+    color: var(--muted);
+    font-size: 1.2rem;
+    padding: 0 0.4rem;
+    flex-shrink: 0;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DL Study ▸ W5–6</div>
+  <a href="#w5" class="nav-link nav-w5">Week 5</a>
+  <a href="#pipeline" class="nav-link">Pipeline</a>
+  <a href="#challenges" class="nav-link">Challenges</a>
+  <a href="#convex" class="nav-link">Convex Opt</a>
+  <a href="#gd" class="nav-link">Gradient Descent</a>
+  <a href="#lr-sched" class="nav-link">LR Schedule</a>
+  <a href="#momentum" class="nav-link">Momentum</a>
+  <a href="#adaptive" class="nav-link">Adagrad→Adam</a>
+  <a href="#w6" class="nav-link nav-w6">Week 6</a>
+  <a href="#generative" class="nav-link">Generative Models</a>
+  <a href="#inpainting" class="nav-link">Inpainting</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">IIT Madras · <span>DL & GenAI Cohort Jan 2026</span></div>
+  <h1>Optimization & Generative Models</h1>
+  <p>Your complete beginner-friendly visual guide to Weeks 5 & 6 — covering gradient descent, convex optimization, adaptive optimizers, and the foundations of generative models. With analogies, flowcharts, and solved examples throughout.</p>
+  <div class="week-pills">
+    <div class="pill pill-blue">Week 5 · Optimization Deep Dive</div>
+    <div class="pill pill-purple">Week 6 · Generative Models</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════ WEEK 5 ════ -->
+<div class="week-header" id="w5">
+  <div class="week-number w5">Week 5</div>
+  <div class="week-title">Optimization: How Neural Nets Actually Learn</div>
+  <div class="week-line"></div>
+</div>
+
+<!-- SECTION: PIPELINE -->
+<div class="section blue" id="pipeline">
+  <div class="section-label lbl-blue">5.1 · Foundations</div>
+  <h2>The Deep Learning Pipeline</h2>
+  <p>Every single deep learning model — whether it classifies images, generates text, or recommends videos — follows the <em>same core loop</em>. Understanding this loop is the foundation of everything else.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🎯</span>
+    <div class="analogy-title">Analogy — Archery Practice</div>
+    <p>Imagine you're learning archery. You shoot an arrow (prediction), see where it lands vs where the bullseye is (loss), and then adjust your stance/grip (update weights). Repeat until you consistently hit the target. That's deep learning training in a nutshell!</p>
+  </div>
+
+  <!-- DL Pipeline Flowchart -->
+  <div class="flowchart-wrap">
+    <svg width="820" height="130" viewBox="0 0 820 130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#5b9fff"/>
+        </marker>
+      </defs>
+      <!-- Nodes -->
+      <rect x="10" y="35" width="110" height="55" rx="10" fill="#161824" stroke="#5b9fff" stroke-width="1.5"/>
+      <text x="65" y="59" text-anchor="middle" fill="#5b9fff" font-family="Syne,sans-serif" font-size="12" font-weight="700">Input Data</text>
+      <text x="65" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">X (image/text)</text>
+
+      <rect x="160" y="35" width="110" height="55" rx="10" fill="#161824" stroke="#4ec98f" stroke-width="1.5"/>
+      <text x="215" y="59" text-anchor="middle" fill="#4ec98f" font-family="Syne,sans-serif" font-size="12" font-weight="700">Network f_W(x)</text>
+      <text x="215" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Weights W / θ</text>
+
+      <rect x="310" y="35" width="110" height="55" rx="10" fill="#161824" stroke="#ffd166" stroke-width="1.5"/>
+      <text x="365" y="59" text-anchor="middle" fill="#ffd166" font-family="Syne,sans-serif" font-size="12" font-weight="700">Prediction ŷ</text>
+      <text x="365" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Model output</text>
+
+      <rect x="460" y="35" width="110" height="55" rx="10" fill="#161824" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="515" y="59" text-anchor="middle" fill="#ff6b6b" font-family="Syne,sans-serif" font-size="12" font-weight="700">Loss L(ŷ, y)</text>
+      <text x="515" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Gap from truth</text>
+
+      <rect x="610" y="35" width="110" height="55" rx="10" fill="#161824" stroke="#b57ff5" stroke-width="1.5"/>
+      <text x="665" y="59" text-anchor="middle" fill="#b57ff5" font-family="Syne,sans-serif" font-size="12" font-weight="700">Optimizer</text>
+      <text x="665" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Update W</text>
+
+      <!-- Arrows -->
+      <line x1="120" y1="62" x2="158" y2="62" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <line x1="270" y1="62" x2="308" y2="62" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <line x1="420" y1="62" x2="458" y2="62" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <line x1="570" y1="62" x2="608" y2="62" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <!-- Feedback loop -->
+      <path d="M720,62 Q760,62 760,110 Q760,125 400,125 Q50,125 50,110 Q50,92 10,92" stroke="#b57ff5" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowBlue)"/>
+      <text x="400" y="122" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="9" font-style="italic">feedback loop — repeat until convergence</text>
+    </svg>
+  </div>
+
+  <h3>The Gradient Descent Update Rule</h3>
+  <p>This is the single most important formula in all of deep learning. Memorize it:</p>
+  <div class="formula">W<sub>new</sub> = W<sub>old</sub> − <span class="hi">η</span> · ∇<sub>W</sub> L(W<sub>old</sub>)
+
+Where:
+  <span class="hi">η</span> (eta)     = Learning rate  → "how big a step to take"
+  <span class="sym">∇_W L</span>      = Gradient       → "which direction is uphill?"
+  <span class="op">Minus sign</span>  = We go downhill (minimize loss)</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Solved Example — 2 Steps of Gradient Descent</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Loss function: <strong>L(w) = (w − 3)²</strong> &nbsp; |&nbsp; Gradient: dL/dw = 2(w − 3) &nbsp; |&nbsp; Start: w=0, η=0.1</p>
+    <table>
+      <tr><th>Step</th><th>w_old</th><th>Gradient = 2(w−3)</th><th>Update = w − 0.1 × grad</th><th>w_new</th></tr>
+      <tr><td>1</td><td>0</td><td>2(0−3) = <span style="color:#ff6b6b">−6</span></td><td>0 − 0.1×(−6) = 0 + 0.6</td><td><span style="color:#4ec98f">0.6</span></td></tr>
+      <tr><td>2</td><td>0.6</td><td>2(0.6−3) = <span style="color:#ff6b6b">−4.8</span></td><td>0.6 − 0.1×(−4.8) = 0.6 + 0.48</td><td><span style="color:#4ec98f">1.08</span></td></tr>
+      <tr><td>3</td><td>1.08</td><td>2(1.08−3) = <span style="color:#ff6b6b">−3.84</span></td><td>1.08 − 0.1×(−3.84)</td><td><span style="color:#4ec98f">1.464</span></td></tr>
+    </table>
+    <div class="result">✅ Each step, w gets closer to the true minimum at w = 3. The gradient points us in the right direction!</div>
+  </div>
+
+  <h3>Training Error vs. Generalization Error — The Real Goal</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-blue)">Empirical Risk (Training Error)</h4>
+      <p>What we actually measure. Average loss over our training dataset. The optimizer minimizes <em>this</em>.</p>
+      <br><code style="font-family:var(--font-mono);font-size:0.8rem;color:#c5d8ff">R_emp = (1/n) Σ L(f_W(xᵢ), yᵢ)</code>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-orange)">True Risk (Generalization Error)</h4>
+      <p>The <em>real</em> goal — how well does the model work on <strong>unseen</strong> data? We can never measure this directly.</p>
+      <br><code style="font-family:var(--font-mono);font-size:0.8rem;color:#c5d8ff">R_true = E[L(f_W(x), y)]</code>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <span class="analogy-icon">🗳️</span>
+    <div class="analogy-title">Analogy — Exit Poll vs Actual Election</div>
+    <p>Exit poll (survey of 2000 people) = Empirical risk (your training data). Actual election result (all voters) = True risk (real world). Just because your training loss is zero doesn't mean you'll perform well on new data — just like exit polls can be wrong!</p>
+  </div>
+
+  <div class="callout warn">
+    <strong>⚠️ Key Insight:</strong> The minimum of training loss and the minimum of true risk can be at <em>different</em> weight values. This is why overfitting happens — you minimized training error but not generalization error. Always use a <strong>validation set</strong>!
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="1">
+      <p>In gradient descent, why do we subtract the gradient (use a minus sign)?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Because we want to increase the loss</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> The gradient points uphill; we subtract to go downhill (minimize loss)</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> It's just a convention with no mathematical meaning</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> To make the learning rate work correctly</div>
+      </div>
+      <div class="quiz-feedback">The gradient ∇L points in the direction of steepest <em>increase</em>. Since we want to MINIMIZE the loss, we move in the <em>opposite</em> direction — hence the minus sign!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: CHALLENGES -->
+<div class="section orange" id="challenges">
+  <div class="section-label lbl-orange">5.1 · Non-Convex Challenges</div>
+  <h2>3 Big Problems with Optimization</h2>
+  <p>Real neural networks have <strong>non-convex loss landscapes</strong> — imagine a crazy mountain range with fog everywhere. Here are the three monsters you face:</p>
+
+  <!-- Challenges Flowchart -->
+  <div class="flowchart-wrap">
+    <svg width="760" height="200" viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect width="760" height="200" fill="#0e1018" rx="12"/>
+
+      <!-- Mountain landscape sketch -->
+      <polyline points="0,180 60,100 100,140 150,50 200,120 260,80 320,150 380,40 440,110 500,70 560,160 620,90 680,130 760,80" fill="none" stroke="#1e2130" stroke-width="2"/>
+      <polyline points="0,200 60,100 100,140 150,50 200,120 260,80 320,150 380,40 440,110 500,70 560,160 620,90 680,130 760,80 760,200" fill="#131520" stroke="none"/>
+
+      <!-- Local Minimum circle -->
+      <circle cx="320" cy="150" r="12" fill="rgba(255,140,66,0.2)" stroke="#ff8c42" stroke-width="2"/>
+      <text x="320" y="172" text-anchor="middle" fill="#ff8c42" font-size="10" font-family="Inter,sans-serif" font-weight="600">Local Min</text>
+      <line x1="320" y1="138" x2="320" y2="108" stroke="#ff8c42" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="240" y="75" width="160" height="30" rx="6" fill="#1e2130" stroke="#ff8c42" stroke-width="1"/>
+      <text x="320" y="87" text-anchor="middle" fill="#ff8c42" font-size="10" font-family="Inter,sans-serif" font-weight="600">Problem 1: Local Minima</text>
+      <text x="320" y="99" text-anchor="middle" fill="#6e7591" font-size="9" font-family="Inter,sans-serif">GD can get stuck here</text>
+
+      <!-- Global Min -->
+      <circle cx="380" cy="40" r="12" fill="rgba(78,201,143,0.2)" stroke="#4ec98f" stroke-width="2"/>
+      <text x="380" y="30" text-anchor="middle" fill="#4ec98f" font-size="10" font-family="Inter,sans-serif" font-weight="600">✓ Global Min</text>
+      <text x="380" y="18" text-anchor="middle" fill="#6e7591" font-size="9" font-family="Inter,sans-serif">We want to be here!</text>
+
+      <!-- Saddle Point -->
+      <circle cx="560" cy="160" r="10" fill="rgba(181,127,245,0.2)" stroke="#b57ff5" stroke-width="2"/>
+      <line x1="560" y1="150" x2="560" y2="125" stroke="#b57ff5" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="490" y="100" width="140" height="22" rx="6" fill="#1e2130" stroke="#b57ff5" stroke-width="1"/>
+      <text x="560" y="115" text-anchor="middle" fill="#b57ff5" font-size="9.5" font-family="Inter,sans-serif" font-weight="600">Problem 2: Saddle Point</text>
+      <text x="560" y="170" text-anchor="middle" fill="#b57ff5" font-size="9" font-family="Inter,sans-serif">Grad = 0, but not min</text>
+
+      <!-- Vanishing label -->
+      <rect x="50" y="110" width="150" height="30" rx="6" fill="#1e2130" stroke="#ff6b6b" stroke-width="1"/>
+      <text x="125" y="122" text-anchor="middle" fill="#ff6b6b" font-size="10" font-family="Inter,sans-serif" font-weight="600">Problem 3: Vanishing</text>
+      <text x="125" y="134" text-anchor="middle" fill="#6e7591" font-size="9" font-family="Inter,sans-serif">Gradients → 0 → no update</text>
+    </svg>
+  </div>
+
+  <h3>Problem 1: Local Minima</h3>
+  <p>A local minimum is a point that looks like the bottom of a valley <em>nearby</em>, but there's a deeper valley somewhere else (the global minimum).</p>
+  <div class="formula">f(x) = x⁴ − 4x² + 3
+
+Evaluate at key points:
+  f(0)  = 3     ← local maximum
+  f(1)  = 0     ← local minimum  
+  f(-1) = 0     ← local minimum
+  (Both x=±1 happen to be global minima for this function)
+
+Point: gradient descent starting at x=4 vs x=-4 may 
+find different local minima — starting point matters!</div>
+
+  <h3>Problem 2: Saddle Points</h3>
+  <p>At a saddle point, the gradient = 0 (so GD stops!), but it's <em>not</em> a minimum. It's a minimum in one direction but a maximum in another — like the middle of a horse saddle.</p>
+  <div class="example">
+    <div class="example-title">🔢 Saddle Point Example: f(x,y) = x² − y²</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">At the point (0, 0):</p>
+    <table>
+      <tr><th>Direction</th><th>Function behavior</th><th>(0,0) looks like...</th></tr>
+      <tr><td>Along x-axis (y=0)</td><td>f = x² → curves upward</td><td>Minimum 🟢</td></tr>
+      <tr><td>Along y-axis (x=0)</td><td>f = -y² → curves downward</td><td>Maximum 🔴</td></tr>
+    </table>
+    <div class="result">∂f/∂x = 2x = 0 and ∂f/∂y = -2y = 0 at (0,0) → gradient is zero, but it's a SADDLE, not a minimum!</div>
+  </div>
+
+  <h3>Problem 3: Vanishing Gradients (Most Dangerous!) 💀</h3>
+  <p>In deep networks using Sigmoid or tanh activations, the gradient gets multiplied by a small number at each layer during backpropagation. After many layers, it becomes so tiny the machine treats it as zero — and learning stops.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">📠</span>
+    <div class="analogy-title">Analogy — Photocopy of a Photocopy</div>
+    <p>Imagine photocopying a document, then photocopying the photocopy, then photocopying that... After 10 rounds, the text is unreadable. That's what happens to gradients when they flow backward through 10 sigmoid layers — each multiplication by 0.25 makes them fainter and fainter!</p>
+  </div>
+
+  <div class="example">
+    <div class="example-title">🔢 Sigmoid Vanishing Gradient — Numerical Proof</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Sigmoid derivative max = 0.25. With 10 layers, the gradient at layer 1 is:</p>
+    <div class="formula">Gradient shrinkage per layer: 0.25 (best case!)
+
+(0.25)^10 = ?
+  0.25^2 = 0.0625
+  0.25^4 = 0.00390625
+  0.25^8 ≈ 0.0000153
+  0.25^10 ≈ 0.000000953 ≈ 10⁻⁶
+
+If final layer gradient = 10⁻³ (reasonable):
+  Layer 1 gradient ≈ 10⁻³ × 10⁻⁶ = 10⁻⁹
+
+Float32 machine precision ≈ 10⁻⁷
+→ 10⁻⁹ appears as ZERO! Learning has stopped for early layers. 😱</div>
+  </div>
+
+  <h3>The Solution: ReLU Activation</h3>
+  <div class="formula">ReLU(z) = max(0, z)
+
+Derivative:
+  ReLU'(z) = 1  (when z > 0)    ← gradient passes through unchanged!
+  ReLU'(z) = 0  (when z ≤ 0)   ← neuron is "off"
+
+Compare to Sigmoid's max derivative of 0.25:
+  Sigmoid: 0.25 × 0.25 × 0.25 = 0.015625 after 3 layers 
+  ReLU:    1    × 1    × 1    = 1.000000 after 3 layers  ✅</div>
+
+  <h3>ResNet Skip Connections — Another Solution</h3>
+  <p>ResNets add a "highway" for the gradient — it can skip layers and travel directly:</p>
+  <div class="formula">Normal: output = F(x)          ← gradient must flow through F
+ResNet: output = F(x) + x      ← gradient has TWO paths!
+
+During backprop:
+  Path 1: Through F(x) (may be small)
+  Path 2: Through "+x" identity shortcut → gradient = 1 (never vanishes!) ✅
+
+This is why 100+ layer networks became possible after ResNet (2015).</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="2">
+      <p>Why does sigmoid activation cause vanishing gradients in deep networks?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Because sigmoid outputs are always negative</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Because sigmoid gradients can exceed 1 and cause overflow</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Its maximum derivative is 0.25, so repeated multiplication makes gradients exponentially small</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Sigmoid is only defined for positive inputs</div>
+      </div>
+      <div class="quiz-feedback">Correct! Sigmoid's max derivative is 0.25. With L layers, gradient ≈ (0.25)^L. For L=10, that's ~10⁻⁶, which becomes numerically zero on most hardware. ReLU's derivative of 1 (for active neurons) solves this!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: CONVEX OPTIMIZATION -->
+<div class="section green" id="convex">
+  <div class="section-label lbl-green">5.2 · Theory</div>
+  <h2>Convex Optimization</h2>
+  <p>Even though deep learning is <em>non-convex</em>, we study convex optimization because: (1) it has beautiful theory with guaranteed answers, (2) simple cases like linear regression <em>are</em> convex, and (3) locally, non-convex functions often <em>look</em> convex. It's our playground for testing ideas.</p>
+
+  <h3>What is a Convex Set?</h3>
+  <div class="analogy">
+    <span class="analogy-icon">🫙</span>
+    <div class="analogy-title">Analogy — The Rubber Band Test</div>
+    <p>Pick any two points inside a shape and draw a straight line between them. If the entire line stays <em>inside</em> the shape, it's convex. A filled circle: ✅ convex. A crescent/C-shape: ❌ not convex (the line would exit the shape).</p>
+  </div>
+  <div class="formula">Formal definition: A set X is CONVEX if for any two points A, B ∈ X
+and any λ ∈ [0, 1]:
+
+    λA + (1-λ)B  also belongs to X
+
+Think of it: λ goes from 0→1, tracing the line from B to A.
+The condition says: every point on that line must be inside X.
+
+Example: The square [0,1] × [0,1]
+  A=(0,0), B=(1,1), λ=0.5:  midpoint = (0.5, 0.5) ✅ inside square
+  ✅ Square is convex!</div>
+
+  <h3>What is a Convex Function?</h3>
+  <p>A function is convex if its graph always lies <em>below or on</em> the chord connecting any two points. Imagine a "smile" shape — like a bowl (U-shape).</p>
+  <div class="formula">f is CONVEX if for all x, x' and λ ∈ [0,1]:
+
+  f(λx + (1-λ)x') ≤ λf(x) + (1-λ)f(x')
+  ↑ function of midpoint     ↑ midpoint of function values
+
+Geometric intuition: The curve is always BELOW the chord.
+
+Check for f(x) = x² at x=0, x'=2:
+  Left side:  f(0+2)/2) = f(1) = 1
+  Right side: (f(0)+f(2))/2 = (0+4)/2 = 2
+  Is 1 ≤ 2? YES ✅ → x² is convex!</div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-green)">✅ Convex Functions</h4>
+      <ul>
+        <li>f(x) = x² (parabola)</li>
+        <li>f(x) = x⁴ (always U-shaped)</li>
+        <li>f(x) = eˣ (exponential)</li>
+        <li>f(x) = |x| (absolute value)</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-red)">❌ Non-Convex Functions</h4>
+      <ul>
+        <li>f(x) = cos(πx) (wavy)</li>
+        <li>f(x) = x³ (S-curve)</li>
+        <li>Loss landscape of deep nets</li>
+        <li>sin(x) (oscillates)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>🌟 The Golden Property of Convex Functions</h3>
+  <div class="callout">
+    <strong>Every local minimum of a convex function is also the global minimum!</strong> This means gradient descent on a convex function is <em>guaranteed</em> to find the best solution. No nasty surprises!
+  </div>
+
+  <h3>Jensen's Inequality</h3>
+  <p>A powerful result: for a convex function f, the <em>average of the function values</em> is always ≥ the <em>function of the average</em>.</p>
+  <div class="example">
+    <div class="example-title">🔢 Jensen's Inequality — Numerical Example</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Let X take values {1, 3} with probability 0.5 each. Let f(x) = x² (convex).</p>
+    <table>
+      <tr><th>Quantity</th><th>Calculation</th><th>Result</th></tr>
+      <tr><td>E[X] (average of X)</td><td>(1+3)/2</td><td>2</td></tr>
+      <tr><td>f(E[X])</td><td>f(2) = 2² = 4</td><td>4</td></tr>
+      <tr><td>E[f(X)] (average of f values)</td><td>0.5×f(1) + 0.5×f(3) = 0.5×1 + 0.5×9</td><td>5</td></tr>
+    </table>
+    <div class="result">E[f(X)] = 5 ≥ f(E[X]) = 4 ✅  Jensen's inequality: E[f(X)] ≥ f(E[X]) for convex f</div>
+  </div>
+
+  <h3>Convexity Check: Second Derivative Test</h3>
+  <div class="formula">1D: f(x) is convex if f''(x) ≥ 0 for all x
+  (Second derivative ≥ 0 means "always curving upward")
+
+  Example: f(x) = x²  →  f'(x)=2x  →  f''(x)=2 ≥ 0  ✅ convex
+  Example: f(x) = x³  →  f'(x)=3x² →  f''(x)=6x → negative for x<0 ❌ not convex
+
+Multi-D: f(x) is convex if the Hessian matrix H is positive semidefinite
+  (All eigenvalues of H ≥ 0)
+
+  Example: f(x₁,x₂) = x₁² + 2x₂²
+    Hessian H = [[2, 0], [0, 4]]
+    Eigenvalues = 2 and 4 (both > 0) → Positive definite → CONVEX ✅</div>
+
+  <h3>Constrained Optimization (Quick Overview)</h3>
+  <p>Sometimes weights must satisfy constraints (e.g., w ≥ 0). Three approaches:</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num blue">1</div>
+      <div class="step-body"><strong>Lagrangian:</strong> Add constraint as a penalty term with multiplier λ. Used heavily in SVM theory: L(x,λ) = f(x) + λ·g(x)</div>
+    </div>
+    <div class="step">
+      <div class="step-num orange">2</div>
+      <div class="step-body"><strong>Penalty / Regularization:</strong> Add ‖w‖² to the loss (L2 regularization). Big weights get penalized — keeps the model simple. This is what <em>weight decay</em> is!</div>
+    </div>
+    <div class="step">
+      <div class="step-num green">3</div>
+      <div class="step-body"><strong>Projection:</strong> Take a GD step, then "snap" the result back to the allowed region. E.g., if constraint is w ∈ [0,1]: w = clip(w_new, 0, 1)</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: GRADIENT DESCENT DEEP DIVE -->
+<div class="section blue" id="gd">
+  <div class="section-label lbl-blue">5.3 · Core Algorithm</div>
+  <h2>Gradient Descent — Deep Dive</h2>
+  <p>We saw the basic formula. Now let's understand the geometry, multi-dimensional case, and its variants.</p>
+
+  <h3>Why Negative Gradient = Fastest Descent (Math Proof!)</h3>
+  <div class="analogy">
+    <span class="analogy-icon">🌡️</span>
+    <div class="analogy-title">Analogy — Finding the Cold Spot in a Room</div>
+    <p>You're blindfolded in a room with a heater and AC. You want to find the coldest spot (AC). At every position you can feel the temperature gradient (which direction is warmer). You move in the <em>opposite</em> direction of the gradient — toward cold! That's gradient descent.</p>
+  </div>
+
+  <p>Using the Taylor expansion: f(x + Δx) ≈ f(x) + ∇f · Δx</p>
+  <div class="formula">Change in f ≈ ∇f · Δx = ‖∇f‖ · ‖Δx‖ · cos(θ)
+
+Where θ = angle between step direction and gradient.
+
+To MINIMIZE the change in f, we need cos(θ) as negative as possible.
+  cos(θ) is most negative when θ = 180° → step is exactly OPPOSITE to gradient!
+
+Therefore: Δx ∝ −∇f   →   Step in negative gradient direction
+This gives maximum decrease in f — "steepest descent".</div>
+
+  <h3>Learning Rate: The Goldilocks Problem</h3>
+
+  <div class="example">
+    <div class="example-title">🔢 Effect of Learning Rate on f(x) = x²</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Starting from x₀=10. Update: x_new = x_old × (1 − 2α)</p>
+    <table>
+      <tr><th>α (learning rate)</th><th>Factor (1−2α)</th><th>Path</th><th>Result</th></tr>
+      <tr><td>0.05 (too small)</td><td>0.9</td><td>10 → 9 → 8.1 → ...</td><td><span class="badge-small badge-yellow">Slow convergence</span></td></tr>
+      <tr><td>0.2 (just right)</td><td>0.6</td><td>10 → 6 → 3.6 → 2.16 → ...</td><td><span class="badge-small badge-green">Fast, stable ✅</span></td></tr>
+      <tr><td>1.1 (too big)</td><td>-1.2</td><td>10 → -12 → 14.4 → -17.28 ...</td><td><span class="badge-small badge-red">Diverges! 💥</span></td></tr>
+    </table>
+    <div class="result">Sweet spot: big enough to converge fast, small enough not to overshoot the minimum.</div>
+  </div>
+
+  <h3>Multi-Dimensional GD: The Ellipse Problem</h3>
+  <p>Real neural networks have millions of parameters. When the loss landscape is more curved in some directions than others (called <strong>bad conditioning</strong>), GD zig-zags inefficiently.</p>
+  <div class="example">
+    <div class="example-title">🔢 Bad Conditioning Example: f(x₁,x₂) = x₁² + 2x₂²</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Start: (x₁,x₂)=(4,4), α=0.1. Gradients: [2x₁, 4x₂]</p>
+    <table>
+      <tr><th>Parameter</th><th>Gradient</th><th>Update (−0.1 × grad)</th><th>New value</th></tr>
+      <tr><td>x₁</td><td>2×4 = 8</td><td>−0.8</td><td>3.2</td></tr>
+      <tr><td>x₂</td><td>4×4 = 16</td><td>−1.6</td><td>2.4</td></tr>
+    </table>
+    <div class="result">x₂ moves TWICE as fast as x₁ due to higher curvature. With extreme conditioning (like x₁² + 20000x₂²), the same learning rate causes x₂ to explode while x₁ barely moves. This motivates adaptive learning rates!</div>
+  </div>
+
+  <h3>Newton's Method — Using Curvature (2nd Order)</h3>
+  <div class="formula">Gradient Descent (1st order): x_new = x − η · ∇f(x)
+Newton's Method (2nd order): x_new = x − H⁻¹ · ∇f(x)
+
+H = Hessian matrix (matrix of all second derivatives)
+H⁻¹ = inverse of Hessian
+
+Why is Newton's method faster?
+  It uses curvature information to take the PERFECT step size!
+
+Example: f(x) = x² + 2
+  f'(x) = 2x,  f''(x) = 2
+  Newton step: x_new = x - 2x/2 = x - x = 0
+  Starting from x=10: ONE step to reach minimum! 🚀
+
+But in deep learning with n=10⁶ parameters:
+  H is 10⁶ × 10⁶ = 10¹² entries → IMPOSSIBLE to store!
+  So we mostly use first-order methods (GD variants) instead.</div>
+
+  <h3>Batch GD vs SGD vs Mini-batch GD</h3>
+
+  <div class="flowchart-wrap">
+    <svg width="760" height="160" viewBox="0 0 760 160" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="160" fill="#0e1018" rx="12"/>
+      <!-- Full Batch -->
+      <rect x="20" y="30" width="200" height="100" rx="10" fill="#161824" stroke="#5b9fff" stroke-width="1.5"/>
+      <text x="120" y="55" text-anchor="middle" fill="#5b9fff" font-family="Syne,sans-serif" font-size="13" font-weight="700">Full Batch GD</text>
+      <text x="120" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Batch size = N (all data)</text>
+      <text x="120" y="92" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">1 update per epoch</text>
+      <text x="120" y="110" text-anchor="middle" fill="#ffd166" font-family="Inter,sans-serif" font-size="10">Smooth path, but SLOW 🐢</text>
+      <!-- Mini-Batch -->
+      <rect x="280" y="30" width="200" height="100" rx="10" fill="#161824" stroke="#4ec98f" stroke-width="2"/>
+      <text x="380" y="55" text-anchor="middle" fill="#4ec98f" font-family="Syne,sans-serif" font-size="13" font-weight="700">Mini-Batch GD ⭐</text>
+      <text x="380" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Batch size = 32/64/128</text>
+      <text x="380" y="92" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">N/B updates per epoch</text>
+      <text x="380" y="110" text-anchor="middle" fill="#4ec98f" font-family="Inter,sans-serif" font-size="10">Best of both worlds ✅</text>
+      <!-- SGD -->
+      <rect x="540" y="30" width="200" height="100" rx="10" fill="#161824" stroke="#ff8c42" stroke-width="1.5"/>
+      <text x="640" y="55" text-anchor="middle" fill="#ff8c42" font-family="Syne,sans-serif" font-size="13" font-weight="700">Stochastic GD (SGD)</text>
+      <text x="640" y="75" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">Batch size = 1</text>
+      <text x="640" y="92" text-anchor="middle" fill="#6e7591" font-family="Inter,sans-serif" font-size="10">N updates per epoch</text>
+      <text x="640" y="110" text-anchor="middle" fill="#ffd166" font-family="Inter,sans-serif" font-size="10">Fast but noisy/zig-zag</text>
+    </svg>
+  </div>
+
+  <div class="example">
+    <div class="example-title">🔢 SGD Step-by-Step (ŷ=wx, 5 data points)</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">Data: {(1,2),(2,4),(3,7),(4,9),(5,8)} | Start w=2, η=0.2 | Gradient = (ŷ−y)·x</p>
+    <table>
+      <tr><th>Example (x,y)</th><th>ŷ=wx</th><th>Error=ŷ−y</th><th>Gradient</th><th>w after update</th></tr>
+      <tr><td>(1, 2)</td><td>2×1=2</td><td>0</td><td>0×1=0</td><td>2.0 (no change)</td></tr>
+      <tr><td>(2, 4)</td><td>2×2=4</td><td>0</td><td>0×2=0</td><td>2.0 (no change)</td></tr>
+      <tr><td>(3, 7)</td><td>2×3=6</td><td>-1</td><td>-1×3=-3</td><td>2 − 0.2×(−3) = <span style="color:#4ec98f">2.6</span></td></tr>
+      <tr><td>(4, 9)</td><td>2.6×4=10.4</td><td>+1.4</td><td>1.4×4=5.6</td><td>2.6 − 0.2×5.6 = <span style="color:#4ec98f">1.48</span></td></tr>
+      <tr><td>(5, 8)</td><td>1.48×5=7.4</td><td>-0.6</td><td>-0.6×5=-3</td><td>1.48 − 0.2×(−3) = <span style="color:#4ec98f">2.08</span></td></tr>
+    </table>
+    <div class="result">After 1 epoch (5 examples), w goes 2 → 2.6 → 1.48 → 2.08. SGD updates weights IMMEDIATELY after each example — notice how w jumps around but trends toward the right value!</div>
+  </div>
+
+  <div class="callout tip">
+    <strong>💡 Why Mini-batch GD + GPU = 🚀:</strong> GPUs excel at matrix multiplications. Processing a batch of B examples is nearly as fast as processing 1 example, because it's all one big matrix multiply! So mini-batch gives you B gradient estimates for almost the same computational cost as 1.
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="3">
+      <p>Why is mini-batch gradient descent preferred over pure SGD in practice?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> It requires less memory than SGD</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> It always converges to the global minimum</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> It has a smaller learning rate than SGD</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Less gradient noise than SGD + GPU vectorization makes it computationally efficient</div>
+      </div>
+      <div class="quiz-feedback">Mini-batch averages gradients over B examples, reducing noise compared to pure SGD (B=1). And GPUs can process a batch as one matrix multiply, making it nearly as fast per example as pure SGD but with much better gradient estimates!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: LEARNING RATE SCHEDULING -->
+<div class="section yellow" id="lr-sched">
+  <div class="section-label lbl-yellow">5.4 · Hyperparameters</div>
+  <h2>Learning Rate Scheduling</h2>
+  <p>A <strong>constant learning rate</strong> is rarely optimal. The trick is to start large (fast movement toward minimum) and shrink over time (precise fine-tuning).</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🛬</span>
+    <div class="analogy-title">Analogy — Landing an Airplane</div>
+    <p>When far from the airport, the plane descends quickly. As it approaches the runway, it slows down dramatically for a precise, smooth landing. Same idea with learning rates — start fast, slow down as you approach the minimum!</p>
+  </div>
+
+  <h3>Types of Learning Rate Schedules</h3>
+
+  <div class="flowchart-wrap">
+    <svg width="760" height="180" viewBox="0 0 760 180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="180" fill="#0e1018" rx="12"/>
+      <!-- Axes -->
+      <line x1="40" y1="20" x2="40" y2="155" stroke="#252a3a" stroke-width="1.5"/>
+      <line x1="40" y1="155" x2="730" y2="155" stroke="#252a3a" stroke-width="1.5"/>
+      <text x="385" y="175" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Training Steps →</text>
+      <text x="15" y="90" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif" transform="rotate(-90,15,90)">LR</text>
+
+      <!-- Piecewise Constant -->
+      <polyline points="40,40 200,40 200,80 380,80 380,115 560,115" fill="none" stroke="#ffd166" stroke-width="2.5"/>
+      <text x="100" y="32" fill="#ffd166" font-size="10" font-family="Inter,sans-serif" font-weight="600">Piecewise Constant</text>
+
+      <!-- Exponential Decay -->
+      <path d="M40,35 Q150,50 300,80 Q450,110 600,135 Q670,143 730,148" fill="none" stroke="#4ec98f" stroke-width="2.5"/>
+      <text x="620" y="128" fill="#4ec98f" font-size="10" font-family="Inter,sans-serif" font-weight="600">Exponential</text>
+
+      <!-- Cosine Annealing -->
+      <path d="M40,50 Q150,150 260,150 Q370,150 470,50 Q540,20 600,140 Q660,150 730,150" fill="none" stroke="#b57ff5" stroke-width="2.5"/>
+      <text x="455" y="42" fill="#b57ff5" font-size="10" font-family="Inter,sans-serif" font-weight="600">Cosine Annealing</text>
+
+      <!-- Warmup -->
+      <path d="M40,155 Q80,100 130,50" fill="none" stroke="#ff8c42" stroke-width="2.5" stroke-dasharray="5,3"/>
+      <text x="55" y="165" fill="#ff8c42" font-size="9" font-family="Inter,sans-serif">Warmup</text>
+    </svg>
+  </div>
+
+  <table class="compare-table">
+    <tr><th>Schedule Type</th><th>Formula</th><th>Behavior</th><th>Best For</th></tr>
+    <tr><td><mark class="orange">Piecewise Constant</mark></td><td>η = η₀ until step T₁, then η₁...</td><td>Drops in steps</td><td>Simple, intuitive schedules</td></tr>
+    <tr><td><mark class="green">Exponential Decay</mark></td><td>η_t = η₀ · γᵗ (e.g. γ=0.9)</td><td>Smooth exponential drop</td><td>Most common, easy to tune</td></tr>
+    <tr><td><mark>Cosine Annealing</mark></td><td>η_t = η_min + ½(η_max−η_min)(1+cos(πt/T))</td><td>Smooth curve, can cycle</td><td>State-of-the-art models</td></tr>
+    <tr><td><mark class="purple">Warmup + Decay</mark></td><td>Small LR → Big LR → Decay</td><td>Rise then fall</td><td>Transformers, large models</td></tr>
+  </table>
+
+  <div class="example">
+    <div class="example-title">🔢 Exponential Decay: η₀=0.1, γ=0.9</div>
+    <table>
+      <tr><th>Step t</th><th>Formula</th><th>LR = 0.1 × 0.9ᵗ</th></tr>
+      <tr><td>0</td><td>0.1 × 0.9⁰</td><td>0.1000</td></tr>
+      <tr><td>1</td><td>0.1 × 0.9¹</td><td>0.0900</td></tr>
+      <tr><td>5</td><td>0.1 × 0.9⁵</td><td>0.0590</td></tr>
+      <tr><td>10</td><td>0.1 × 0.9¹⁰</td><td>0.0349</td></tr>
+      <tr><td>50</td><td>0.1 × 0.9⁵⁰</td><td>0.0052</td></tr>
+    </table>
+    <div class="result">Each step, LR shrinks by 10%. This prevents overshooting the minimum as training progresses.</div>
+  </div>
+
+  <div class="callout">
+    <strong>🌀 Cosine Annealing Intuition:</strong> Sometimes the scheduler <em>increases</em> the LR slightly during training. This helps the optimizer escape local minima by jumping a bit — like warming metal to find a better crystal structure (annealing). Then it cools again for precision.
+  </div>
+</div>
+
+<!-- SECTION: MOMENTUM -->
+<div class="section cyan" id="momentum">
+  <div class="section-label lbl-cyan">5.4 · Optimization</div>
+  <h2>Momentum — Learning from History</h2>
+  <p>Normal GD only looks at the <em>current</em> gradient. Momentum keeps a "running average" of past gradients, like a ball gaining speed rolling downhill.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">⚽</span>
+    <div class="analogy-title">Analogy — Rolling Ball on a Hill</div>
+    <p>A ball rolling down a hill doesn't just respond to the current slope — it has momentum (inertia). If it was going fast in one direction, it keeps going that way unless the slope is very different. Small bumps don't throw it off course. This is exactly what momentum does for gradient descent!</p>
+  </div>
+
+  <h3>Momentum Equations</h3>
+  <div class="formula">Normal GD:
+  w_new = w_old − η · ∇J(w)
+
+Momentum GD (adds velocity v):
+  <span class="sym">v_t = β · v_{t-1} + ∇J(w_t)</span>       ← update velocity
+  <span class="hi">w_{t+1} = w_t − η · v_t</span>             ← update weights
+
+β = momentum coefficient (typically 0.9)
+  β = 0 → same as normal GD (no memory)
+  β → 1 → lots of memory (past gradients matter a lot)</div>
+
+  <p>Unrolling the velocity equation reveals that <strong>v_t is an exponentially weighted average</strong> of past gradients — recent ones count more, old ones fade away:</p>
+  <div class="formula">v_3 = g_3 + β·g_2 + β²·g_1 + β³·g_0
+
+With β=0.9:
+  g_3 gets weight 1      (current gradient, full weight)
+  g_2 gets weight 0.9    (1 step old)
+  g_1 gets weight 0.81   (2 steps old)
+  g_0 gets weight 0.729  (3 steps old → nearly forgotten)</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Momentum vs Normal GD on f(w)=w², w₀=10, η=0.2, β=0.9</div>
+    <table>
+      <tr><th>Step</th><th>Normal GD</th><th>Momentum GD</th><th>Explanation</th></tr>
+      <tr><td>Start</td><td>w=10</td><td>w=10, v=0</td><td>Same start</td></tr>
+      <tr><td>1</td><td>w=6 (×0.6)</td><td>v=0+20=20; w=10−0.2×20=6</td><td>Same first step</td></tr>
+      <tr><td>2</td><td>w=3.6 (×0.6)</td><td>v=0.9×20+12=30; w=6−0.2×30=<span style="color:#4ec98f">0</span></td><td>Momentum <strong>much faster!</strong></td></tr>
+    </table>
+    <div class="result">Normal GD: w goes 10→6→3.6. Momentum: w goes 10→6→0 (hits minimum in 2 steps!). Past gradients built up speed in the right direction.</div>
+  </div>
+
+  <h3>Why Momentum Helps with Bad Conditioning</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-red)">Without Momentum</h4>
+      <p>GD zig-zags between the walls of the elliptical valley. Each step, it overshoots in the steep direction, then has to come back.</p>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-green)">With Momentum</h4>
+      <p>Oscillations in the steep direction <em>cancel out</em> (positive then negative gradients average to ~zero). Movement in the flat direction <em>accumulates</em>. Path becomes smooth!</p>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <strong>💡 Typical values:</strong> β=0.9 (standard), β=0.95 or 0.99 (for very noisy gradients). In PyTorch: <code style="font-family:var(--font-mono)">optim.SGD(params, lr=0.1, momentum=0.9)</code>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="1">
+      <p>What happens to the velocity v_t in the momentum formula if we set β = 0?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> The optimizer becomes Adam</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> v_t = gradient alone → reduces to vanilla gradient descent</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> The optimizer diverges</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Learning rate becomes 0</div>
+      </div>
+      <div class="quiz-feedback">With β=0: v_t = 0·v_{t-1} + ∇J = ∇J. No memory of past gradients. The update becomes w = w − η·∇J, which is exactly vanilla gradient descent!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: ADAPTIVE OPTIMIZERS -->
+<div class="section purple" id="adaptive">
+  <div class="section-label lbl-purple">5.4 · Advanced Optimizers</div>
+  <h2>Adagrad → RMSProp → Adadelta → Adam</h2>
+  <p>The problem: <strong>one learning rate for all parameters is suboptimal</strong>. Some parameters need big updates (rare features/pixels), some need small updates (frequent ones). Adaptive methods give each parameter its own effective learning rate.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🗣️</span>
+    <div class="analogy-title">Analogy — The Quiet Student in Class</div>
+    <p>In a class discussion, the student who talks constantly gets "tuned out" — people stop listening as closely. But the quiet student who rarely speaks — when they do speak, everyone pays attention! Adaptive optimizers do the same: parameters that "scream" (frequent large gradients) get their learning rate reduced. Quiet parameters get more attention when they do speak.</p>
+  </div>
+
+  <!-- Optimizer Evolution -->
+  <div class="optimizer-flow">
+    <div class="opt-node">
+      <div class="opt-name">Basic GD</div>
+      <div class="opt-desc">Same η for all</div>
+    </div>
+    <div class="opt-arrow">→</div>
+    <div class="opt-node" style="border-color:var(--accent-orange)">
+      <div class="opt-name" style="color:var(--accent-orange)">Adagrad</div>
+      <div class="opt-desc">Per-param LR<br>via grad² sum</div>
+    </div>
+    <div class="opt-arrow">→</div>
+    <div class="opt-node" style="border-color:var(--accent-yellow)">
+      <div class="opt-name" style="color:var(--accent-yellow)">RMSProp</div>
+      <div class="opt-desc">Adagrad + EMA<br>(LR doesn't → 0)</div>
+    </div>
+    <div class="opt-arrow">→</div>
+    <div class="opt-node" style="border-color:var(--accent-cyan)">
+      <div class="opt-name" style="color:var(--accent-cyan)">Adadelta</div>
+      <div class="opt-desc">No global η<br>self-adjusting</div>
+    </div>
+    <div class="opt-arrow">→</div>
+    <div class="opt-node" style="border-color:var(--accent-green); background:rgba(78,201,143,0.08)">
+      <div class="opt-name" style="color:var(--accent-green)">Adam ⭐</div>
+      <div class="opt-desc">Momentum +<br>RMSProp + Bias fix</div>
+    </div>
+  </div>
+
+  <h3>1. Adagrad — Adaptive Gradient</h3>
+  <div class="formula">For each parameter i:
+  s_{t,i} = s_{t-1,i} + g²_{t,i}    ← running sum of squared gradients
+  
+  Update: θ_{t+1,i} = θ_{t,i} − (η / √(s_{t,i} + ε)) · g_{t,i}
+
+Intuition:
+  Large past gradients → big s_{t,i} → small effective LR  (frequent = slow down)
+  Small past gradients → small s_{t,i} → big effective LR  (rare = speed up)</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Adagrad: f(w)=w², w₀=10, η=1</div>
+    <table>
+      <tr><th>Step</th><th>w</th><th>g=2w</th><th>s = s_prev + g²</th><th>Effective LR = η/√s</th><th>w_new</th></tr>
+      <tr><td>1</td><td>10</td><td>20</td><td>0+400=400</td><td>1/20=0.050</td><td>10−0.05×20=9</td></tr>
+      <tr><td>2</td><td>9</td><td>18</td><td>400+324=724</td><td>1/26.9=0.037</td><td>9−0.037×18≈8.33</td></tr>
+      <tr><td>3</td><td>8.33</td><td>16.67</td><td>724+278=1002</td><td>1/31.7=0.032</td><td>≈7.80</td></tr>
+    </table>
+    <div class="result">LR automatically decays: 0.050 → 0.037 → 0.032. But notice s only grows! Eventually s→∞ and LR→0 — learning stops. This is Adagrad's main weakness.</div>
+  </div>
+
+  <h3>2. RMSProp — Leaky Adagrad</h3>
+  <p>Fix: instead of summing all squared gradients, use an <strong>Exponential Moving Average (EMA)</strong> — old gradients "leak out" and lose influence.</p>
+  <div class="formula">s_{t,i} = ρ·s_{t-1,i} + (1-ρ)·g²_{t,i}    ← EMA (ρ ≈ 0.9)
+
+  Update same as Adagrad: θ_{t+1,i} = θ_{t,i} − (η/√(s_{t,i}+ε)) · g_{t,i}
+
+Key difference from Adagrad:
+  s_t doesn't keep growing forever!
+  Old gradients fade with factor ρ per step
+  → LR stays adaptive and never hits zero</div>
+
+  <div class="example">
+    <div class="example-title">🔢 RMSProp Step 1: w₀=10, η=0.1, ρ=0.9, s₀=0</div>
+    <div class="formula">g₁ = 2×10 = 20
+s₁ = 0.9×0 + 0.1×20² = 0 + 40 = 40       (NOT 400 like Adagrad!)
+η_eff = 0.1/√40 ≈ 0.1/6.32 ≈ 0.0158
+Δw = 0.0158 × 20 ≈ 0.316
+w₁ = 10 − 0.316 = 9.684                   (vs Adagrad's 9.0)</div>
+    <div class="result">s₁=40 for RMSProp vs 400 for Adagrad (10× smaller!) because EMA doesn't blindly accumulate. This keeps LR from dying too fast.</div>
+  </div>
+
+  <h3>3. Adadelta — No Global Learning Rate</h3>
+  <p>Adadelta takes this further: no global η at all! The learning rate emerges automatically from the ratio of two EMAs:</p>
+  <div class="formula">E[g²]_t = ρ·E[g²]_{t-1} + (1-ρ)·g²_t    ← EMA of squared gradients
+E[Δw²]_t = ρ·E[Δw²]_{t-1} + (1-ρ)·Δw²_t   ← EMA of squared updates
+
+Effective step: Δw_t = − (√E[Δw²]_{t-1} + ε) / (√E[g²]_t + ε) · g_t
+
+Intuition: ratio of "how big updates have been" to "how big gradients are"
+No η to tune! But Adam has largely replaced it in practice.</div>
+
+  <h3>4. Adam — The Industry Standard ⭐</h3>
+  <p>Adam = <strong>Adaptive Moment Estimation</strong>. It combines: (1) Momentum (first moment = EMA of gradients) + (2) RMSProp (second moment = EMA of squared gradients) + (3) Bias correction.</p>
+  <div class="formula">Given gradient g_t at step t:
+
+(1) First moment (momentum):
+    m_t = β₁·m_{t-1} + (1-β₁)·g_t      [β₁ ≈ 0.9]
+
+(2) Second moment (RMSProp):  
+    v_t = β₂·v_{t-1} + (1-β₂)·g²_t     [β₂ ≈ 0.999]
+
+(3) Bias correction (because m₀=v₀=0, early estimates are too small):
+    m̂_t = m_t / (1 − β₁ᵗ)
+    v̂_t = v_t / (1 − β₂ᵗ)
+
+(4) Update:
+    w_{t+1} = w_t − η · m̂_t / (√v̂_t + ε)
+
+Typical values: η=1e-3, β₁=0.9, β₂=0.999, ε=1e-8</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Adam Full Example: f(w)=w², w₀=1, η=0.1, β₁=0.9, β₂=0.999</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;"><strong>Step 1 (t=1):</strong></p>
+    <div class="formula" style="margin:0.5rem 0; font-size:0.82rem">g₁ = 2×1 = 2
+m₁ = 0.9×0 + 0.1×2 = 0.2
+v₁ = 0.999×0 + 0.001×4 = 0.004
+m̂₁ = 0.2/(1−0.9¹) = 0.2/0.1 = 2.0       ← bias corrected
+v̂₁ = 0.004/(1−0.999¹) = 0.004/0.001 = 4.0
+Step = 0.1 × 2.0/√4.0 = 0.1 × 2/2 = 0.1
+w₁ = 1 − 0.1 = 0.9</div>
+    <p style="font-size:0.88rem; margin:0.75rem 0 0.5rem;"><strong>Step 2 (t=2):</strong></p>
+    <div class="formula" style="margin:0.5rem 0; font-size:0.82rem">g₂ = 2×0.9 = 1.8
+m₂ = 0.9×0.2 + 0.1×1.8 = 0.18+0.18 = 0.36
+v₂ = 0.999×0.004 + 0.001×3.24 ≈ 0.007236
+m̂₂ = 0.36/(1−0.81) = 0.36/0.19 ≈ 1.895
+v̂₂ = 0.007236/(1−0.998) ≈ 3.62  →  √v̂₂ ≈ 1.903
+Step = 0.1 × 1.895/1.903 ≈ 0.0996
+w₂ = 0.9 − 0.0996 ≈ 0.800</div>
+    <div class="result">Adam smoothly moves w: 1 → 0.9 → 0.80, heading toward minimum at 0. The bias correction prevented wildly large steps in the first few iterations!</div>
+  </div>
+
+  <hr class="divider">
+
+  <h3>Comparison Table: All Optimizers at a Glance</h3>
+  <table class="compare-table">
+    <tr><th>Optimizer</th><th>Core Idea</th><th>Pros</th><th>Cons</th><th>Use When</th></tr>
+    <tr>
+      <td><mark>SGD + Momentum</mark></td>
+      <td>Gradient + velocity history</td>
+      <td>Simple, generalizes well</td>
+      <td>Needs LR tuning, bad conditioning</td>
+      <td>Computer vision, proven tasks</td>
+    </tr>
+    <tr>
+      <td><mark class="orange">Adagrad</mark></td>
+      <td>Per-param LR via grad² sum</td>
+      <td>Great for sparse features (NLP)</td>
+      <td>LR → 0 over time</td>
+      <td>Sparse data, early NLP</td>
+    </tr>
+    <tr>
+      <td><mark class="green">RMSProp</mark></td>
+      <td>Adagrad + EMA of grad²</td>
+      <td>LR stays healthy long-term</td>
+      <td>Still needs global η</td>
+      <td>RNNs, non-stationary problems</td>
+    </tr>
+    <tr>
+      <td><mark class="purple">Adam ⭐</mark></td>
+      <td>Momentum + RMSProp + bias fix</td>
+      <td>Fast, robust, adaptive per-param</td>
+      <td>Many hyperparameters</td>
+      <td>Default choice for almost everything</td>
+    </tr>
+  </table>
+
+  <!-- PyTorch code -->
+  <h3>PyTorch Code Reference</h3>
+  <div class="code-block"><span class="kw">import</span> torch.optim <span class="kw">as</span> optim
+
+<span class="cm"># SGD with momentum</span>
+optimizer = optim.<span class="fn">SGD</span>(model.parameters(), lr=<span class="num">0.1</span>, momentum=<span class="num">0.9</span>)
+
+<span class="cm"># Adam (default choice)</span>
+optimizer = optim.<span class="fn">Adam</span>(model.parameters(), lr=<span class="num">1e-3</span>, betas=(<span class="num">0.9</span>, <span class="num">0.999</span>))
+
+<span class="cm"># RMSProp</span>
+optimizer = optim.<span class="fn">RMSprop</span>(model.parameters(), lr=<span class="num">0.01</span>, alpha=<span class="num">0.9</span>)
+
+<span class="cm"># Exponential LR decay scheduler</span>
+scheduler = optim.lr_scheduler.<span class="fn">ExponentialLR</span>(optimizer, gamma=<span class="num">0.9</span>)
+
+<span class="kw">for</span> epoch <span class="kw">in</span> range(epochs):
+    <span class="kw">for</span> x, y <span class="kw">in</span> dataloader:
+        optimizer.<span class="fn">zero_grad</span>()       <span class="cm"># clear old gradients</span>
+        loss = criterion(model(x), y)
+        loss.<span class="fn">backward</span>()             <span class="cm"># compute gradients</span>
+        optimizer.<span class="fn">step</span>()             <span class="cm"># update weights</span>
+    scheduler.<span class="fn">step</span>()               <span class="cm"># reduce LR each epoch</span></div>
+
+  <div class="summary">
+    <div class="summary-title">📋 Week 5 Complete Summary</div>
+    <ul>
+      <li><strong>DL Pipeline:</strong> Input → Network → Prediction → Loss → Optimizer → Repeat</li>
+      <li><strong>GD Update:</strong> W_new = W_old − η · ∇L(W_old)</li>
+      <li><strong>3 Problems:</strong> Local minima, Saddle points, Vanishing gradients</li>
+      <li><strong>Vanishing gradient fix:</strong> ReLU (derivative=1) + ResNet skip connections</li>
+      <li><strong>Convex functions:</strong> Local min = Global min. f''≥0 for convex. Jensen: E[f(X)] ≥ f(E[X])</li>
+      <li><strong>GD variants:</strong> Batch (stable, slow) → Mini-batch (best!) → SGD (fast, noisy)</li>
+      <li><strong>LR Scheduling:</strong> Constant → Exponential → Cosine Annealing</li>
+      <li><strong>Momentum:</strong> v_t = β·v_{t-1} + ∇J; w = w − η·v_t; helps zig-zagging</li>
+      <li><strong>Adagrad:</strong> Per-param LR via squared gradient sum (LR → 0 eventually)</li>
+      <li><strong>RMSProp:</strong> Adagrad with EMA — LR stays healthy</li>
+      <li><strong>Adam:</strong> Momentum + RMSProp + Bias correction — <em>the default optimizer</em></li>
+    </ul>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="0">
+      <p>Why does Adam use bias correction (dividing by 1−β^t)?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> m₀=v₀=0, so early estimates of m_t and v_t are biased toward zero</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> To make the learning rate always equal to 0.001</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> To prevent gradients from exploding</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Because Adam doesn't use momentum</div>
+      </div>
+      <div class="quiz-feedback">Since we initialize m₀=0 and v₀=0, the first few EMA estimates are pulled toward zero (biased low). Dividing by (1−β^t) corrects this — at step 1 with β=0.9, we divide by 0.1, multiplying by 10x to compensate for starting at zero!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ WEEK 6 ════ -->
+<div class="week-header" id="w6">
+  <div class="week-number w6">Week 6</div>
+  <div class="week-title">Generative Models: Teaching AI to Create</div>
+  <div class="week-line"></div>
+</div>
+
+<!-- SECTION: GENERATIVE MODELS -->
+<div class="section purple" id="generative">
+  <div class="section-label lbl-purple">6.1 · Foundations</div>
+  <h2>Generative vs. Discriminative Models</h2>
+  <p>This is the first big conceptual split in Week 6. Until now, we've built <em>discriminative</em> models (classify this!). Generative models learn something much richer — the distribution of the data itself.</p>
+
+  <div class="analogy">
+    <span class="analogy-icon">🎨</span>
+    <div class="analogy-title">Analogy — Art Critic vs. Artist</div>
+    <p><strong>Discriminative model</strong> = Art critic: Given a painting, says "This is Monet" or "This is Picasso". Learns to distinguish. <br><br><strong>Generative model</strong> = Artist: Has studied so many Monet paintings that it can <em>paint a new Monet</em> from scratch — one that never existed but looks authentic!</p>
+  </div>
+
+  <!-- Discriminative vs Generative SVG -->
+  <div class="flowchart-wrap">
+    <svg width="760" height="190" viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg">
+      <rect width="760" height="190" fill="#0e1018" rx="12"/>
+
+      <!-- Discriminative side -->
+      <text x="190" y="25" text-anchor="middle" fill="#5b9fff" font-family="Syne,sans-serif" font-size="13" font-weight="700">Discriminative Model</text>
+      <rect x="20" y="40" width="120" height="50" rx="8" fill="#161824" stroke="#252a3a" stroke-width="1"/>
+      <text x="80" y="61" text-anchor="middle" fill="#6e7591" font-size="11" font-family="Inter,sans-serif">Image X</text>
+      <text x="80" y="77" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">(cat photo)</text>
+      <line x1="140" y1="65" x2="175" y2="65" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <rect x="175" y="40" width="100" height="50" rx="8" fill="#161824" stroke="#5b9fff" stroke-width="1.5"/>
+      <text x="225" y="61" text-anchor="middle" fill="#5b9fff" font-size="11" font-family="Inter,sans-serif">CNN Model</text>
+      <text x="225" y="77" text-anchor="middle" fill="#5b9fff" font-size="10" font-family="Inter,sans-serif">learns P(Y|X)</text>
+      <line x1="275" y1="65" x2="310" y2="65" stroke="#5b9fff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <rect x="310" y="40" width="60" height="50" rx="8" fill="#161824" stroke="#252a3a" stroke-width="1"/>
+      <text x="340" y="61" text-anchor="middle" fill="#4ec98f" font-size="11" font-family="Inter,sans-serif">"Cat"</text>
+      <text x="340" y="77" text-anchor="middle" fill="#4ec98f" font-size="10" font-family="Inter,sans-serif">P(cat|X)</text>
+      <text x="190" y="120" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Learns decision boundary only</text>
+      <text x="190" y="135" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Can't generate new cats</text>
+
+      <!-- Divider -->
+      <line x1="395" y1="20" x2="395" y2="175" stroke="#252a3a" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+      <!-- Generative side -->
+      <text x="580" y="25" text-anchor="middle" fill="#b57ff5" font-family="Syne,sans-serif" font-size="13" font-weight="700">Generative Model</text>
+      <rect x="415" y="40" width="90" height="50" rx="8" fill="#161824" stroke="#252a3a" stroke-width="1"/>
+      <text x="460" y="61" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Train data</text>
+      <text x="460" y="77" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">(many cats)</text>
+      <line x1="505" y1="65" x2="535" y2="65" stroke="#b57ff5" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <rect x="535" y="40" width="100" height="50" rx="8" fill="#161824" stroke="#b57ff5" stroke-width="1.5"/>
+      <text x="585" y="57" text-anchor="middle" fill="#b57ff5" font-size="11" font-family="Inter,sans-serif">Generative</text>
+      <text x="585" y="71" text-anchor="middle" fill="#b57ff5" font-size="11" font-family="Inter,sans-serif">Model</text>
+      <text x="585" y="84" text-anchor="middle" fill="#b57ff5" font-size="9" font-family="Inter,sans-serif">learns P(X,Y)</text>
+      <line x1="635" y1="65" x2="665" y2="65" stroke="#b57ff5" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+      <rect x="665" y="40" width="80" height="50" rx="8" fill="#161824" stroke="#4ec98f" stroke-width="1.5"/>
+      <text x="705" y="57" text-anchor="middle" fill="#4ec98f" font-size="11" font-family="Inter,sans-serif">New cat</text>
+      <text x="705" y="73" text-anchor="middle" fill="#4ec98f" font-size="10" font-family="Inter,sans-serif">generated!</text>
+      <text x="580" y="120" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Learns full data distribution P(X)</text>
+      <text x="580" y="135" text-anchor="middle" fill="#6e7591" font-size="10" font-family="Inter,sans-serif">Can generate, inpaint, detect anomalies</text>
+    </svg>
+  </div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:var(--accent-blue)">Discriminative — Learns P(Y|X)</h4>
+      <ul>
+        <li>Given X, what is the label Y?</li>
+        <li>Learns decision boundary</li>
+        <li>Can't generate new data</li>
+        <li><strong>Examples:</strong> Logistic Regression, SVM, CNN classifiers</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:var(--accent-purple)">Generative — Learns P(X,Y) or P(X)</h4>
+      <ul>
+        <li>What does the data look like?</li>
+        <li>Learns full distribution</li>
+        <li>Can generate, inpaint, detect anomalies</li>
+        <li><strong>Examples:</strong> GAN, VAE, Diffusion Models</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Generative Models — What Can They Do?</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num purple">1</div>
+      <div class="step-body"><strong>Generate new realistic samples:</strong> Create images/audio/text that look like training data but aren't in it. (Stable Diffusion, DALL·E, Sora)</div>
+    </div>
+    <div class="step">
+      <div class="step-num blue">2</div>
+      <div class="step-body"><strong>Inpainting (fill in gaps):</strong> Given a partial image, predict what the missing parts look like. Used in photo restoration!</div>
+    </div>
+    <div class="step">
+      <div class="step-num orange">3</div>
+      <div class="step-body"><strong>Anomaly Detection:</strong> If the model has learned P(X) for "normal" data, an input with very low P(X) is an anomaly/outlier.</div>
+    </div>
+    <div class="step">
+      <div class="step-num green">4</div>
+      <div class="step-body"><strong>Representation Learning:</strong> Learn a meaningful <em>latent space</em> — a compressed representation where similar data is close together.</div>
+    </div>
+  </div>
+
+  <h3>Latent Space — The "Code" of the World</h3>
+  <div class="analogy">
+    <span class="analogy-icon">🧬</span>
+    <div class="analogy-title">Analogy — DNA as a Latent Space</div>
+    <p>A complete human (10 trillion cells, impossibly complex) is encoded in ~3 billion DNA base pairs. That's a compressed representation! Similarly, a 1024×1024 image (3M pixels) can be represented in a 512-dimensional latent vector z. Changing z slightly = changing facial expression, lighting, age, etc. in a smooth, meaningful way.</p>
+  </div>
+
+  <div class="formula">Generative Model Structure:
+
+  Encoder: X (image) → z (latent vector, e.g. 512-D)
+  Generator: z (latent vector) → X' (new image)
+
+  z ~ N(0, I)    ← sample random noise
+  X' = Generator(z)   ← decode to new image!
+
+The magic: z is in a "semantic space" where:
+  - Moving along one dimension = changing smile intensity
+  - Moving along another = changing hair color
+  - Interpolating between two z vectors = morphing between faces</div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="2">
+      <p>What is the fundamental difference between discriminative and generative models?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Discriminative models are newer and more powerful than generative models</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Generative models can only work with images, not text</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Discriminative models learn P(Y|X) while generative models learn P(X) or P(X,Y)</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Generative models require labeled data; discriminative models do not</div>
+      </div>
+      <div class="quiz-feedback">Discriminative models learn the conditional probability of labels given data P(Y|X) — they just learn to classify. Generative models learn the data distribution P(X) or joint P(X,Y), allowing them to generate new data, fill gaps, detect anomalies, and more!</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: INPAINTING -->
+<div class="section cyan" id="inpainting">
+  <div class="section-label lbl-cyan">6.1 · Math of Generation</div>
+  <h2>Probability, Marginalization & Inpainting</h2>
+  <p>Let's build intuition through a tiny toy example: a 2×2 binary image (4 pixels, each 0 or 1). This gives us only 2⁴ = 16 possible images — small enough to reason about completely.</p>
+
+  <h3>The Toy World: 2×2 Binary Image</h3>
+  <div class="formula">Image: 4 pixels → x₁₁, x₁₂, x₂₁, x₂₂ (each is 0 or 1)
+
+  Example image:   [1  1]
+                   [0  0]   → stored as vector [1, 1, 0, 0]
+
+Total possible images = 2⁴ = 16
+
+A Generative Model assigns a probability to EACH of the 16 patterns!
+(Thinks: "Which patterns are common in the real world?")</div>
+
+  <div class="example">
+    <div class="example-title">📊 Joint Distribution P(x₁₁, x₁₂, x₂₁, x₂₂) — 8 of 16 patterns shown</div>
+    <table>
+      <tr><th>Pattern (x₁₁x₁₂x₂₁x₂₂)</th><th>Image looks like</th><th>P(pattern)</th></tr>
+      <tr><td>1 0 0 0</td><td>Top-left only lit</td><td>0.05</td></tr>
+      <tr><td>1 0 0 1</td><td>Diagonal</td><td>0.08</td></tr>
+      <tr><td>1 0 1 0</td><td>Left column lit</td><td>0.10</td></tr>
+      <tr><td>1 0 1 1</td><td>Left + bottom-right</td><td>0.04</td></tr>
+      <tr><td>1 1 0 0</td><td><strong>Top row lit ← most likely!</strong></td><td><strong>0.12</strong></td></tr>
+      <tr><td>1 1 0 1</td><td>Top + bottom-right</td><td>0.06</td></tr>
+      <tr><td>1 1 1 0</td><td>All except bottom-right</td><td>0.09</td></tr>
+      <tr><td>1 1 1 1</td><td>All white</td><td>0.11</td></tr>
+    </table>
+    <div class="result">The 8 patterns with x₁₁=1 sum to 0.65. The other 8 patterns (x₁₁=0) sum to 0.35. Total = 1.0 ✅</div>
+  </div>
+
+  <h3>Marginalization — Finding the Probability of One Pixel</h3>
+  <p>Question: What's the probability that the top-left pixel x₁₁ = 1? We sum over all possible values of the other pixels:</p>
+  <div class="formula">P(x₁₁=1) = Σ over all x₁₂,x₂₁,x₂₂ of P(x₁₁=1, x₁₂, x₂₁, x₂₂)
+
+= 0.05 + 0.08 + 0.10 + 0.04 + 0.12 + 0.06 + 0.09 + 0.11
+
+= 0.65
+
+Interpretation: In this toy world, 65% of images have the top-left pixel lit.</div>
+
+  <div class="analogy">
+    <span class="analogy-icon">📊</span>
+    <div class="analogy-title">Analogy — "What's the chance it rains today?"</div>
+    <p>You don't know the temperature, wind speed, or humidity — but you can still ask "what's the chance of rain?" by summing over all possible combinations of those other variables. That's exactly marginalization — sum (or integrate) over the variables you don't care about to get the probability of what you do care about.</p>
+  </div>
+
+  <h3>Inpainting — Filling in Missing Pixels</h3>
+  <p>Now the key application: given that x₁₁=1 (top-left pixel is white), what's the most likely completion of the image?</p>
+  <div class="formula">We want: argmax P(x₁₂, x₂₁, x₂₂ | x₁₁=1)
+
+Using Bayes' theorem:
+  P(x_missing | x_observed) = P(x_missing, x_observed) / P(x_observed)
+
+Since P(x₁₁=1) = 0.65 is constant, we just need to find which pattern
+with x₁₁=1 has the highest joint probability:
+
+Pattern   |  P
+1 0 0 0   |  0.05
+1 0 0 1   |  0.08
+1 0 1 0   |  0.10
+1 0 1 1   |  0.04
+1 1 0 0   |  0.12  ← MAXIMUM! 🏆
+1 1 0 1   |  0.06
+1 1 1 0   |  0.09
+1 1 1 1   |  0.11
+
+Answer: Best completion = [1 1; 0 0] (top row all white, bottom all black)</div>
+
+  <div class="example">
+    <div class="example-title">🔢 Generative Classifier — Bayes Theorem Applied</div>
+    <p style="font-size:0.88rem; margin-bottom:0.7rem;">A generative model learns P(X|class) for each class. To classify, use Bayes' theorem:</p>
+    <div class="formula">Given: P(X|cat)=0.02, P(X|dog)=0.01, P(cat)=0.6, P(dog)=0.4
+
+Score_cat = P(X|cat) × P(cat) = 0.02 × 0.6 = 0.012
+Score_dog = P(X|dog) × P(dog) = 0.01 × 0.4 = 0.004
+
+Since 0.012 > 0.004 → Predict: CAT 🐱
+
+Exact posterior: P(cat|X) = 0.012 / (0.012 + 0.004) = 0.012/0.016 = 75%
+                 P(dog|X) = 25%</div>
+    <div class="result">This is how classic Naive Bayes classifiers work! A generative model that models P(X|Y) can be used for classification via Bayes' theorem.</div>
+  </div>
+
+  <h3>The Scaling Problem — Why We Need Neural Networks</h3>
+  <div class="callout warn">
+    <strong>⚠️ The Curse of Dimensionality:</strong> Our toy 2×2 binary image had only 2⁴ = 16 states — easy! But a real 32×32 grayscale image has 256^(32×32) ≈ 10^2466 possible images. We can NEVER store this table. This is why we use neural networks that <em>approximate</em> the distribution function instead of storing it explicitly.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num blue">GAN</div>
+      <div class="step-body"><strong>Generative Adversarial Network:</strong> Generator creates fake images, Discriminator tries to spot them. They compete until the generator makes perfect fakes. (Noise z → Generator → Fake image)</div>
+    </div>
+    <div class="step">
+      <div class="step-num purple">VAE</div>
+      <div class="step-body"><strong>Variational Autoencoder:</strong> Encoder compresses image to latent z, Decoder reconstructs. z is a smooth, structured latent space you can interpolate through.</div>
+    </div>
+    <div class="step">
+      <div class="step-num orange">Diff</div>
+      <div class="step-body"><strong>Diffusion Models:</strong> Gradually add noise to an image (destroys it), then train a network to reverse the process (denoise). Stable Diffusion, DALL·E 3, Midjourney all use this!</div>
+    </div>
+  </div>
+
+  <!-- MCQ -->
+  <div class="quiz">
+    <div class="quiz-title">🧠 Quick Check</div>
+    <div class="quiz-q" data-answer="3">
+      <p>In the inpainting problem, given observed pixels, how do we find the best completion?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Choose random values for missing pixels</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Always use zeros for missing pixels</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Minimize P(missing pixels | observed pixels)</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Find the missing values that maximize P(missing|observed), equivalent to maximizing the joint probability</div>
+      </div>
+      <div class="quiz-feedback">We want the most likely completion: argmax P(x_miss | x_obs). By Bayes' theorem, this equals argmax P(x_miss, x_obs) / P(x_obs). Since P(x_obs) is constant, we just find the pattern with the highest joint probability among all completions of the known pixels!</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">📋 Week 6 Summary</div>
+    <ul>
+      <li><strong>Discriminative:</strong> Learns P(Y|X) — classifies, can't generate. (CNNs, logistic regression)</li>
+      <li><strong>Generative:</strong> Learns P(X) or P(X,Y) — can generate, inpaint, detect anomalies, classify via Bayes</li>
+      <li><strong>Latent space z:</strong> Compressed, meaningful representation. z ~ N(0,I) → Generator → new image!</li>
+      <li><strong>Marginalization:</strong> P(x₁₁=1) = sum over all other pixel combos of P(joint)</li>
+      <li><strong>Inpainting:</strong> argmax P(missing | observed) = argmax joint probability among valid completions</li>
+      <li><strong>Generative classifier:</strong> Score_c = P(X|c) × P(c) → predict class with highest score (Bayes' theorem)</li>
+      <li><strong>Scaling problem:</strong> Real images have 2^(millions) states → use neural nets to approximate P(X), not store it</li>
+      <li><strong>Modern generative models:</strong> GAN (adversarial), VAE (variational autoencoder), Diffusion (Stable Diffusion, DALL·E 3)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FINAL COMPREHENSIVE MCQ -->
+<div class="section blue" style="margin-top:0.5rem">
+  <div class="section-label lbl-blue">Final Review</div>
+  <h2>Mixed Quiz — Weeks 5 & 6</h2>
+
+  <div class="quiz">
+    <div class="quiz-q" data-answer="2">
+      <p>1. Which optimizer combines momentum AND per-parameter adaptive learning rates with bias correction?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> SGD with Momentum</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Adagrad</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Adam</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> RMSProp</div>
+      </div>
+      <div class="quiz-feedback">Adam (Adaptive Moment Estimation) = Momentum (first moment/EMA of gradients) + RMSProp (second moment/EMA of squared gradients) + bias correction for both. It's the default optimizer for a reason!</div>
+    </div>
+
+    <div class="quiz-q" data-answer="1">
+      <p>2. A loss function L(w) = w⁴ + w² has gradient 4w³ + 2w = 0 only at w=0. Is w=0 a local minimum, saddle point, or global minimum?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Saddle point — it looks like a minimum but isn't</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Global minimum — the function is always ≥ 0 and equals 0 only at w=0</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Local minimum but not global minimum</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Not a critical point at all</div>
+      </div>
+      <div class="quiz-feedback">L(w) = w⁴ + w² ≥ 0 for all w, and equals exactly 0 only when w=0. So w=0 is the global minimum! Also, L''(w) = 12w²+2, and L''(0) = 2 > 0, confirming it's a minimum not a saddle point.</div>
+    </div>
+
+    <div class="quiz-q" data-answer="3">
+      <p>3. In the 2×2 binary image example, P(x₁₁=1) was calculated as 0.65. What mathematical operation was used?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> Conditional probability using Bayes' theorem</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> Maximum likelihood estimation</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> Chain rule of probability</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Marginalization — summing the joint probability over all values of the other variables</div>
+      </div>
+      <div class="quiz-feedback">Marginalization! P(x₁₁=1) = Σ over all (x₁₂,x₂₁,x₂₂) of P(x₁₁=1, x₁₂, x₂₁, x₂₂). We summed all 8 joint probability entries where x₁₁=1 to get 0.65. This is a fundamental operation in probability theory!</div>
+    </div>
+
+    <div class="quiz-q" data-answer="0">
+      <p>4. Why can't we store the complete probability table for a 32×32 grayscale image?</p>
+      <div class="quiz-options">
+        <div class="quiz-opt" onclick="answerQ(this,0)"><span class="quiz-opt-key">A</span> A 32×32 grayscale image has 256^1024 possible states — astronomically more than atoms in the universe</div>
+        <div class="quiz-opt" onclick="answerQ(this,1)"><span class="quiz-opt-key">B</span> It would require floating-point numbers which are too imprecise</div>
+        <div class="quiz-opt" onclick="answerQ(this,2)"><span class="quiz-opt-key">C</span> We can store it; it just takes a few hundred gigabytes</div>
+        <div class="quiz-opt" onclick="answerQ(this,3)"><span class="quiz-opt-key">D</span> Neural networks can't be trained on such data</div>
+      </div>
+      <div class="quiz-feedback">A 32×32 image has 1024 pixels, each taking 256 values → 256^1024 ≈ 10^2466 possible images. That's incomprehensibly larger than the estimated 10^80 atoms in the observable universe! This is why generative models must learn a function that approximates P(X), not a lookup table.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<div style="text-align:center; padding:3rem 2rem; color:var(--muted); font-size:0.82rem; border-top:1px solid var(--border);">
+  <p style="margin-bottom:0.4rem;">Deep Learning & Generative AI · IIT Madras · Weeks 5 & 6 Study Guide</p>
+  <p>Built with ❤️ for serious learning. Covers: Optimization, Convex Theory, GD Variants, LR Scheduling, Momentum, Adagrad/RMSProp/Adam, Generative vs Discriminative Models, Latent Spaces, Marginalization & Inpainting.</p>
+</div>
+
+<script>
+function answerQ(el, selected) {
+  const qBlock = el.closest('.quiz-q');
+  if (qBlock.dataset.answered) return;
+  qBlock.dataset.answered = 'true';
+
+  const correct = parseInt(qBlock.dataset.answer);
+  const opts = qBlock.querySelectorAll('.quiz-opt');
+  const feedback = qBlock.querySelector('.quiz-feedback');
+
+  opts.forEach((opt, i) => {
+    opt.style.pointerEvents = 'none';
+    if (i === correct) opt.classList.add('reveal-correct');
+  });
+
+  if (selected === correct) {
+    el.classList.add('correct');
+    feedback.classList.add('show', 'correct');
+    feedback.innerHTML = '✅ ' + feedback.innerHTML;
+  } else {
+    el.classList.add('wrong');
+    feedback.classList.add('show', 'wrong');
+    feedback.innerHTML = '❌ ' + feedback.innerHTML;
+  }
+}
+</script>
+</body>
+</html>
